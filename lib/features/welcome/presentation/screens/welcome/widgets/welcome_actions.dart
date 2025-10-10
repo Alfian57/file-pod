@@ -1,5 +1,7 @@
+import 'package:file_pod/core/configs/router-configs/router_names.dart';
 import 'package:flutter/material.dart';
-import 'package:file_pod/widgets/app_button.dart';
+import 'package:file_pod/core/widgets/app_button.dart';
+import 'package:go_router/go_router.dart';
 
 class WelcomeActions extends StatelessWidget {
   const WelcomeActions({super.key});
@@ -22,7 +24,9 @@ class WelcomeActions extends StatelessWidget {
                 child: AppButton(
                   label: 'Register',
                   icon: Icons.person_add,
-                  onPressed: () {},
+                  onPressed: () {
+                    context.pushNamed(RouteNames.register);
+                  },
                   type: AppButtonType.outlined,
                   iconOnRight: true,
                 ),
@@ -31,9 +35,11 @@ class WelcomeActions extends StatelessWidget {
               SizedBox(
                 width: 150,
                 child: AppButton(
-                  label: 'Sign in',
+                  label: 'Login',
                   icon: Icons.arrow_right_alt,
-                  onPressed: () {},
+                  onPressed: () {
+                    context.pushNamed(RouteNames.login);
+                  },
                   type: AppButtonType.primary,
                   iconOnRight: true,
                 ),
