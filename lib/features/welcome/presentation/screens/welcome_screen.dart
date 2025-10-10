@@ -1,7 +1,7 @@
-import 'package:file_pod/features/welcome/presentation/screens/welcome/widgets/welcome_background.dart';
-import 'package:file_pod/features/welcome/presentation/screens/welcome/widgets/welcome_header.dart';
-import 'package:file_pod/features/welcome/presentation/screens/welcome/widgets/welcome_actions.dart';
-import 'package:file_pod/features/welcome/presentation/screens/welcome/widgets/social_login_buttons.dart';
+import 'package:file_pod/features/welcome/presentation/widgets/welcome_background.dart';
+import 'package:file_pod/features/welcome/presentation/widgets/welcome_header.dart';
+import 'package:file_pod/features/welcome/presentation/widgets/welcome_actions.dart';
+import 'package:file_pod/features/welcome/presentation/widgets/welcome_social_login.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -23,7 +23,7 @@ class WelcomeScreen extends StatelessWidget {
                 SizedBox(height: 32),
                 WelcomeActions(),
                 SizedBox(height: 32),
-                Center(child: SocialLoginButtons()),
+                WelcomeSocialLogin(),
               ],
             ),
           ),
