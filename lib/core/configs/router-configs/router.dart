@@ -1,6 +1,7 @@
 import 'package:file_pod/core/configs/router-configs/router_names.dart';
 import 'package:file_pod/features/storage/presentation/screens/storage_detail_screen.dart';
 import 'package:file_pod/features/storage/presentation/screens/storage_screen.dart';
+import 'package:file_pod/features/storage/presentation/screens/storage_stat_screen.dart';
 import 'package:file_pod/features/welcome/presentation/screens/welcome/welcome_screen.dart';
 import 'package:file_pod/features/auth/presentation/screens/login/login_screen.dart';
 import 'package:file_pod/features/auth/presentation/screens/register/register_screen.dart';
@@ -9,7 +10,7 @@ import 'package:go_router/go_router.dart';
 
 final routerProvider = Provider((ref) {
   return GoRouter(
-    initialLocation: "/storage",
+    initialLocation: "/storage-stat",
     routes: [
       GoRoute(
         name: RouteNames.welcome,
@@ -35,6 +36,11 @@ final routerProvider = Provider((ref) {
         name: RouteNames.storageDetail,
         path: '/storage-detail',
         builder: (context, state) => StorageDetailScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.storageStat,
+        path: '/storage-stat',
+        builder: (context, state) => StorageStatScreen(),
       ),
     ],
   );
