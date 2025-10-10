@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:file_pod/theme.dart';
 
-class FolderHeader extends StatelessWidget {
-  const FolderHeader({super.key});
+class StorageFolderHeader extends StatelessWidget {
+  const StorageFolderHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

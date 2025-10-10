@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:file_pod/core/widgets/recent_upload_item.dart';
+import 'package:file_pod/features/storage/presentation/widgets/recent_upload_item.dart';
 
-class RecentUploadList extends StatelessWidget {
-  const RecentUploadList({super.key});
+class StorageDetailRecentUploadList extends StatelessWidget {
+  const StorageDetailRecentUploadList({super.key});
 
   @override
   Widget build(BuildContext context) {

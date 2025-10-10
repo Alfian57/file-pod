@@ -67,6 +67,7 @@ flutter:
   assets:
     - lib/assets/images/welcome-illustration.png
     - lib/assets/images/welcome-bg.png
+    - lib/assets/icons/union.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

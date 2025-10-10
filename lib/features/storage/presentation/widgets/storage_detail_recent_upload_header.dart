@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:file_pod/theme.dart';
 
-class RecentUploadHeader extends StatelessWidget {
-  const RecentUploadHeader({super.key});
+class StorageDetailRecentUploadHeader extends StatelessWidget {
+  const StorageDetailRecentUploadHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

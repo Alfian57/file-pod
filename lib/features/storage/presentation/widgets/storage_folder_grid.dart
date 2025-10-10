@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:file_pod/core/widgets/folder_card.dart';
+import 'package:file_pod/features/storage/presentation/widgets/folder_card.dart';
 
-class FolderGrid extends StatelessWidget {
-  const FolderGrid({super.key});
+class StorageFolderGrid extends StatelessWidget {
+  const StorageFolderGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
