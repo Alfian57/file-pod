@@ -4,17 +4,44 @@ import 'package:file_pod/core/widgets/app_input.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:file_pod/theme.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:file_pod/features/auth/presentation/controllers/auth_controller.dart';
 
-class LoginForm extends StatefulWidget {
+class LoginForm extends ConsumerStatefulWidget {
   const LoginForm({super.key});
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  ConsumerState<LoginForm> createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _LoginFormState extends ConsumerState<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
+
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void onSubmit() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      final res = await ref
+          .read(authControllerProvider.notifier)
+          .login(_emailController.text.trim(), _passwordController.text);
+
+      res.fold(
+        (err) => ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(err))),
+        (_) => context.goNamed(RouteNames.storage),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +55,11 @@ class _LoginFormState extends State<LoginForm> {
           AppInput(
             hintText: 'Email Address',
             icon: Icons.email_outlined,
+            controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             validator: (v) {
+              if (v == null || v.isEmpty) return 'Email is required';
+              if (!v.contains('@')) return 'Invalid email';
               return null;
             },
           ),
@@ -37,6 +67,7 @@ class _LoginFormState extends State<LoginForm> {
           AppInput(
             hintText: 'Password',
             icon: Icons.lock_outline,
+            controller: _passwordController,
             obscureText: _obscurePassword,
             suffix: IconButton(
               onPressed: () =>
@@ -49,6 +80,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             validator: (v) {
+              if (v == null || v.isEmpty) return 'Password is required';
               return null;
             },
           ),
@@ -73,11 +105,7 @@ class _LoginFormState extends State<LoginForm> {
               label: 'Login',
               icon: Icons.arrow_right_alt,
               iconOnRight: true,
-              onPressed: () {
-                if (_formKey.currentState?.validate() ?? false) {
-                  // Handle login
-                }
-              },
+              onPressed: onSubmit,
             ),
           ),
         ],
