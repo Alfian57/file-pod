@@ -5,6 +5,7 @@ import 'package:file_pod/features/storage/presentation/screens/storage_stat_scre
 import 'package:file_pod/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:file_pod/features/auth/presentation/screens/login_screen.dart';
 import 'package:file_pod/features/auth/presentation/screens/register_screen.dart';
+import 'package:file_pod/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -26,6 +27,11 @@ final routerProvider = Provider((ref) {
         name: RouteNames.register,
         path: RouteNames.register,
         builder: (context, state) => RegisterScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.forgotPassword,
+        path: RouteNames.forgotPassword,
+        builder: (context, state) => ForgotPasswordScreen(),
       ),
       GoRoute(
         name: RouteNames.storage,

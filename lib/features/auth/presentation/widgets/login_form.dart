@@ -1,5 +1,7 @@
+import 'package:file_pod/core/configs/router-configs/route_names.dart';
 import 'package:file_pod/core/widgets/app_button.dart';
 import 'package:file_pod/core/widgets/app_input.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:file_pod/theme.dart';
 
@@ -56,7 +58,7 @@ class _LoginFormState extends State<LoginForm> {
             children: [
               const Spacer(),
               TextButton(
-                onPressed: () {},
+                onPressed: () => context.pushNamed(RouteNames.forgotPassword),
                 child: Text(
                   'Forgot Password?',
                   style: t.titleSmall?.copyWith(color: AppTheme.primary),

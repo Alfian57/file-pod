@@ -17,7 +17,7 @@ class RegisterLoginAction extends StatelessWidget {
         children: [
           Text('Already have an account? ', style: t.bodySmall),
           GestureDetector(
-            onTap: () => context.goNamed(RouteNames.login),
+            onTap: () => context.pushNamed(RouteNames.login),
             child: Text(
               'Login',
               style: t.titleSmall?.copyWith(
