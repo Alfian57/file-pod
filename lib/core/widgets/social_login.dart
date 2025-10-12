@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class WelcomeSocialLogin extends StatelessWidget {
-  const WelcomeSocialLogin({super.key});
+class SocialLogin extends StatelessWidget {
+  const SocialLogin({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class WelcomeSocialLogin extends StatelessWidget {
             textAlign: TextAlign.center,
             style: t.bodyMedium?.copyWith(color: theme.colorScheme.onSurface),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
