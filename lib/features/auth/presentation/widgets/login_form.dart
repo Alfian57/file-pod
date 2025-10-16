@@ -28,18 +28,14 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     super.dispose();
   }
 
-  void onSubmit() async {
+  void onSubmit() {
     if (_formKey.currentState?.validate() ?? false) {
-      final res = await ref
+      ref
           .read(authControllerProvider.notifier)
-          .login(_emailController.text.trim(), _passwordController.text);
-
-      res.fold(
-        (err) => ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(err))),
-        (_) => context.goNamed(RouteNames.storage),
-      );
+          .loginWithEmailAndPassword(
+            _emailController.text.trim(),
+            _passwordController.text,
+          );
     }
   }
 
@@ -47,6 +43,27 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final t = theme.textTheme;
+
+    void showSnackBar(String text, bool isError) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(text),
+          backgroundColor: isError ? theme.colorScheme.error : null,
+        ),
+      );
+    }
+
+    ref.listen(authControllerProvider, (prev, next) {
+      if (next.error != null) {
+        showSnackBar(next.error!, true);
+      }
+
+      if (prev?.isLoading == true && !next.isLoading && next.error == null) {
+        context.goNamed(RouteNames.storage);
+      }
+    });
 
     return Form(
       key: _formKey,

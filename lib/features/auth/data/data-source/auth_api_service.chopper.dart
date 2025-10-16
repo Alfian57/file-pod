@@ -1,7 +1,7 @@
 // dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_service.dart';
+part of 'auth_api_service.dart';
 
 // **************************************************************************
 // ChopperGenerator
@@ -9,21 +9,25 @@ part of 'auth_service.dart';
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
-final class _$AuthService extends AuthService {
-  _$AuthService([ChopperClient? client]) {
+final class _$AuthApiService extends AuthApiService {
+  _$AuthApiService([ChopperClient? client]) {
     if (client == null) return;
     this.client = client;
   }
 
   @override
-  final Type definitionType = AuthService;
+  final Type definitionType = AuthApiService;
 
   @override
-  Future<Response<Map<String, dynamic>>> login(Map<String, dynamic> body) {
+  Future<Response<ApiResponseModel<LoginDataModel>>> login(
+    Map<String, dynamic> body,
+  ) {
     final Uri $url = Uri.parse('/api/auth/login');
     final $body = body;
     final Request $request = Request('POST', $url, client.baseUrl, body: $body);
-    return client.send<Map<String, dynamic>, Map<String, dynamic>>($request);
+    return client.send<ApiResponseModel<LoginDataModel>, LoginDataModel>(
+      $request,
+    );
   }
 
   @override

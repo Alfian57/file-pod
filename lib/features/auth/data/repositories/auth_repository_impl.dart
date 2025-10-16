@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:file_pod/features/auth/data/data-source/auth_data_source.dart';
-import 'package:file_pod/features/auth/domain/entities/user_entity.dart';
 import 'package:file_pod/features/auth/data/data-source/auth_data_source_impl.dart';
+import 'package:file_pod/features/auth/domain/entities/user_entity.dart';
 import 'package:file_pod/features/auth/domain/repositories/auth_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,7 +16,8 @@ class AuthRepositoryImpl implements AuthRepository {
       final user = await authDataSource.getCurrentUser();
       return Right(user);
     } catch (e) {
-      return Left(e.toString());
+      final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+      return Left(msg);
     }
   }
 
@@ -29,7 +30,8 @@ class AuthRepositoryImpl implements AuthRepository {
       await authDataSource.loginWithEmailAndPassword(email, password);
       return const Right(unit);
     } catch (e) {
-      return Left(e.toString());
+      final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+      return Left(msg);
     }
   }
 
@@ -39,7 +41,8 @@ class AuthRepositoryImpl implements AuthRepository {
       await authDataSource.logout();
       return const Right(unit);
     } catch (e) {
-      return Left(e.toString());
+      final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+      return Left(msg);
     }
   }
 
@@ -49,7 +52,8 @@ class AuthRepositoryImpl implements AuthRepository {
       await authDataSource.register(user);
       return const Right(unit);
     } catch (e) {
-      return Left(e.toString());
+      final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+      return Left(msg);
     }
   }
 }

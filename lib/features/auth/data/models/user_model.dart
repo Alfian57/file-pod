@@ -1,32 +1,25 @@
-import 'package:file_pod/features/auth/domain/entities/user_entity.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-class UserModel extends UserEntity {
-  const UserModel({
-    required super.id,
-    required super.name,
-    required super.email,
-    required super.password,
+part 'user_model.g.dart';
+
+@JsonSerializable()
+class UserModel {
+  UserModel({
+    required this.name,
+    required this.email,
+    this.profilePictureUrl,
+    required this.storageQuotaBytes,
+    required this.storageUsedBytes,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      email: json['email'] as String,
-      password: json['password'] as String,
-    );
-  }
+  final String name;
+  final String email;
+  final String? profilePictureUrl;
+  final int storageQuotaBytes;
+  final int storageUsedBytes;
 
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name, 'email': email, 'password': password};
-  }
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 
-  factory UserModel.fromEntity(UserEntity entity) {
-    return UserModel(
-      id: entity.id,
-      name: entity.name,
-      email: entity.email,
-      password: entity.password,
-    );
-  }
+  Map<String, dynamic> toJson() => _$UserModelToJson(this);
 }

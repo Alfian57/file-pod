@@ -34,40 +34,43 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
     super.dispose();
   }
 
-  void onSubmit() async {
+  void onSubmit() {
     if (_formKey.currentState?.validate() ?? false) {
       final user = UserEntity(
-        id: '',
         name: _nameController.text.trim(),
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
 
-      final res = await ref
-          .read(authControllerProvider.notifier)
-          .register(user);
-
-      res.fold(
-        (err) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(err)));
-        },
-
-        (_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Registration successful, please login'),
-            ),
-          );
-          context.pushNamed(RouteNames.login);
-        },
-      );
+      ref.read(authControllerProvider.notifier).register(user);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    showSnackBar(String text, bool isError) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(text),
+          backgroundColor: isError ? theme.colorScheme.error : null,
+        ),
+      );
+    }
+
+    ref.listen(authControllerProvider, (prev, next) {
+      if (next.error != null) {
+        showSnackBar(next.error!, true);
+      }
+
+      if (prev?.isLoading == true && !next.isLoading && next.error == null) {
+        showSnackBar('Registration successful', false);
+        context.pushNamed(RouteNames.login);
+      }
+    });
+
     return Form(
       key: _formKey,
       child: Column(

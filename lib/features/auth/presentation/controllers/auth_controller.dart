@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:file_pod/features/auth/domain/entities/user_entity.dart';
@@ -11,8 +10,17 @@ class AuthState {
   final bool isLoading;
   final String? error;
 
-  AuthState copyWith({bool? isLoading, String? error}) =>
-      AuthState(isLoading: isLoading ?? this.isLoading, error: error);
+  AuthState copyWith({
+    bool? isLoading,
+    String? error,
+    bool clearError = false,
+  }) {
+    final resolvedError = clearError ? null : (error ?? this.error);
+    return AuthState(
+      isLoading: isLoading ?? this.isLoading,
+      error: resolvedError,
+    );
+  }
 }
 
 class AuthController extends Notifier<AuthState> {
@@ -24,24 +32,22 @@ class AuthController extends Notifier<AuthState> {
     return const AuthState();
   }
 
-  Future<Either<String, Unit>> login(String email, String password) async {
+  Future<void> loginWithEmailAndPassword(String email, String password) async {
     state = state.copyWith(isLoading: true, error: null);
     final res = await _repo.loginWithEmailAndPassword(email, password);
     state = state.copyWith(
       isLoading: false,
       error: res.fold((l) => l, (_) => null),
     );
-    return res;
   }
 
-  Future<Either<String, Unit>> register(UserEntity user) async {
+  Future<void> register(UserEntity user) async {
     state = state.copyWith(isLoading: true, error: null);
     final res = await _repo.register(user);
     state = state.copyWith(
       isLoading: false,
       error: res.fold((l) => l, (_) => null),
     );
-    return res;
   }
 }
 
