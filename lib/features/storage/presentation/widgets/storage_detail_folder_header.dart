@@ -16,15 +16,7 @@ class StorageDetailFolderHeader extends StatelessWidget {
           children: [
             IconButton(
               onPressed: () {},
-              icon: Icon(Icons.add, color: AppTheme.textPrimary),
-            ),
-            IconButton(
-              onPressed: () {},
               icon: Icon(Icons.tune, color: AppTheme.textPrimary),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.arrow_forward_ios, color: AppTheme.textPrimary),
             ),
           ],
         ),

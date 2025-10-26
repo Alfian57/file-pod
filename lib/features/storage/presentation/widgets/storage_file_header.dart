@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:file_pod/theme.dart';
 
-class StorageDetailRecentUploadHeader extends StatelessWidget {
-  const StorageDetailRecentUploadHeader({super.key});
+class StorageFileHeader extends StatelessWidget {
+  const StorageFileHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,10 +11,10 @@ class StorageDetailRecentUploadHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text('Recent Uploads', style: theme.textTheme.headlineSmall),
+        Text('My Files', style: theme.textTheme.headlineSmall),
         IconButton(
           onPressed: () {},
-          icon: Icon(Icons.swap_vert, color: AppTheme.textPrimary),
+          icon: Icon(Icons.tune, color: AppTheme.textPrimary),
         ),
       ],
     );
