@@ -1,4 +1,4 @@
-import 'package:file_pod/core/widgets/social_login.dart';
+import 'package:file_pod/core/widgets/shared/social_login.dart';
 import 'package:file_pod/features/auth/presentation/widgets/register_form.dart';
 import 'package:file_pod/features/auth/presentation/widgets/register_header.dart';
 import 'package:file_pod/features/auth/presentation/widgets/register_login_action.dart';

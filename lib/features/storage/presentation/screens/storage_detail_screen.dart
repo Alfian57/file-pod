@@ -1,3 +1,4 @@
+import 'package:file_pod/core/widgets/shared/storage_app_bar.dart';
 import 'package:file_pod/features/storage/presentation/controllers/storage_controller.dart';
 import 'package:file_pod/features/storage/presentation/widgets/storage_detail_folder_grid.dart';
 import 'package:file_pod/features/storage/presentation/widgets/storage_detail_folder_header.dart';
@@ -93,39 +94,7 @@ class _StorageDetailScreenState extends ConsumerState<StorageDetailScreen> {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: theme.scaffoldBackgroundColor,
-        foregroundColor: AppTheme.textPrimary,
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios_new),
-        ),
-        title: Text(widget.folderName, style: theme.textTheme.headlineSmall),
-        actions: [
-          PopupMenuButton<String>(
-            icon: Image.asset(
-              'lib/assets/icons/union.png',
-              width: 16,
-              height: 16,
-            ),
-            onSelected: (value) async {},
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'logout',
-                child: Row(
-                  children: [
-                    Icon(Icons.logout, size: 20),
-                    SizedBox(width: 8),
-                    Text('Logout'),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+      appBar: StorageAppBar(title: widget.folderName),
       body: storageState.isLoading && storageState.storageDetail == null
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(

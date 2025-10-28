@@ -1,4 +1,4 @@
-import 'package:file_pod/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:file_pod/core/widgets/shared/storage_app_bar.dart';
 import 'package:file_pod/features/storage/presentation/controllers/storage_controller.dart';
 import 'package:file_pod/features/storage/presentation/widgets/storage_folder_search.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +11,7 @@ import '../widgets/storage_file_list.dart';
 import '../widgets/create_folder_dialog.dart';
 import '../widgets/storage_action_menu.dart';
 import '../widgets/file_upload_handler.dart';
+import '../../../../core/widgets/shared/storage_bottom_navigation_bar.dart';
 
 class StorageScreen extends ConsumerStatefulWidget {
   const StorageScreen({super.key});
@@ -67,7 +68,6 @@ class _StorageScreenState extends ConsumerState<StorageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final storageState = ref.watch(storageControllerProvider);
 
     // Show error message if any
@@ -81,38 +81,7 @@ class _StorageScreenState extends ConsumerState<StorageScreen> {
 
     return Scaffold(
       backgroundColor: AppTheme.background,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: theme.scaffoldBackgroundColor,
-        foregroundColor: AppTheme.textPrimary,
-        title: Text('File Pod', style: theme.textTheme.headlineSmall),
-        actions: [
-          PopupMenuButton<String>(
-            icon: Image.asset(
-              'lib/assets/icons/union.png',
-              width: 16,
-              height: 16,
-            ),
-            onSelected: (value) async {
-              if (value == 'logout') {
-                await ref.read(authControllerProvider.notifier).logout();
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'logout',
-                child: Row(
-                  children: [
-                    Icon(Icons.logout, size: 20),
-                    SizedBox(width: 8),
-                    Text('Logout'),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+      appBar: StorageAppBar(title: "File Pod"),
       body: storageState.isLoading && storageState.storage == null
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
@@ -144,6 +113,7 @@ class _StorageScreenState extends ConsumerState<StorageScreen> {
         backgroundColor: AppTheme.primary,
         child: const Icon(Icons.add, size: 28, color: Colors.white),
       ),
+      bottomNavigationBar: StorageBottomNavigationBar(),
     );
   }
 }
