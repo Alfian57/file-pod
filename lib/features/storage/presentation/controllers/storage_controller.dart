@@ -38,7 +38,8 @@ class StorageController extends Notifier<StorageState> {
 
   @override
   StorageState build() {
-    _repo = ref.read(storageRepositoryProvider);
+    // Using watch for dependency injection, which is proper for Riverpod
+    _repo = ref.watch(storageRepositoryProvider);
     return const StorageState();
   }
 
