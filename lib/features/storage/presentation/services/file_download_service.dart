@@ -12,6 +12,7 @@ class FileDownloadService {
     required String fileId,
     required String fileName,
   }) async {
+    if (!context.mounted) return;
     _showLoadingSnackBar(context, fileName);
 
     try {
@@ -19,50 +20,53 @@ class FileDownloadService {
           .read(storageControllerProvider.notifier)
           .downloadFile(fileId);
 
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-      }
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).clearSnackBars();
 
       if (fileBytes == null) {
-        if (context.mounted) {
-          _showErrorDialog(
-            context,
-            'Download Failed',
-            'Failed to download "$fileName". Please try again.',
-          );
-        }
+        if (!context.mounted) return;
+        _showErrorDialog(
+          context,
+          'Download Failed',
+          'Failed to download "$fileName". Please try again.',
+        );
         return;
       }
 
-      final hasPermission = await _requestStoragePermission(context);
-      if (!hasPermission) return;
+      final hasPermission = await _requestStoragePermission();
+      if (!hasPermission) {
+        if (!context.mounted) return;
+        _showErrorDialog(
+          context,
+          'Permission Required',
+          'Storage permission is required to download files. Please grant the permission in settings.',
+        );
+        return;
+      }
 
       final directory = await _getDownloadDirectory();
       if (directory == null) {
-        if (context.mounted) {
-          _showErrorDialog(
-            context,
-            'Download Failed',
-            'Could not access downloads directory.',
-          );
-        }
+        if (!context.mounted) return;
+        _showErrorDialog(
+          context,
+          'Download Failed',
+          'Could not access downloads directory.',
+        );
         return;
       }
 
       final filePath = await _saveFile(directory, fileName, fileBytes);
 
-      if (context.mounted) {
-        _showSuccessDialog(context, fileName, filePath);
-      }
+      if (!context.mounted) return;
+      _showSuccessDialog(context, fileName, filePath);
     } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        _showErrorDialog(
-          context,
-          'Download Failed',
-          'Error downloading "$fileName": ${e.toString()}',
-        );
-      }
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).clearSnackBars();
+      _showErrorDialog(
+        context,
+        'Download Failed',
+        'Error downloading "$fileName": ${e.toString()}',
+      );
     }
   }
 
@@ -94,7 +98,7 @@ class FileDownloadService {
     );
   }
 
-  static Future<bool> _requestStoragePermission(BuildContext context) async {
+  static Future<bool> _requestStoragePermission() async {
     var status = await Permission.manageExternalStorage.status;
     if (!status.isGranted) {
       status = await Permission.manageExternalStorage.request();
@@ -107,18 +111,7 @@ class FileDownloadService {
       }
     }
 
-    if (!status.isGranted && Platform.isAndroid) {
-      if (context.mounted) {
-        _showErrorDialog(
-          context,
-          'Permission Required',
-          'Storage permission is required to download files. Please grant the permission in settings.',
-        );
-      }
-      return false;
-    }
-
-    return true;
+    return status.isGranted || !Platform.isAndroid;
   }
 
   static Future<Directory?> _getDownloadDirectory() async {
