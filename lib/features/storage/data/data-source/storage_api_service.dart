@@ -34,6 +34,9 @@ abstract class StorageApiService extends ChopperService {
   @DELETE(path: '/file/{id}')
   Future<Response<ApiResponseModel<dynamic>>> deleteFile(@Path('id') String id);
 
+  @GET(path: '/file/{id}')
+  Future<Response<dynamic>> downloadFile(@Path('id') String id);
+
   static StorageApiService create([ChopperClient? client]) {
     return _$StorageApiService(client);
   }

@@ -97,6 +97,16 @@ class StorageController extends Notifier<StorageState> {
       error: res.fold((error) => error, (_) => null),
     );
   }
+
+  Future<List<int>?> downloadFile(String fileId) async {
+    state = state.copyWith(isLoading: true, error: null, clearError: true);
+    final res = await _repo.downloadFile(fileId);
+    state = state.copyWith(
+      isLoading: false,
+      error: res.fold((error) => error, (_) => null),
+    );
+    return res.fold((_) => null, (fileBytes) => fileBytes);
+  }
 }
 
 final storageControllerProvider =

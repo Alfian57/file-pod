@@ -11,4 +11,5 @@ abstract class StorageRepository {
   Future<Either<String, Unit>> deleteFolder(String folderId);
   Future<Either<String, Unit>> uploadFile(String filePath, String? folderId);
   Future<Either<String, Unit>> deleteFile(String fileId);
+  Future<Either<String, List<int>>> downloadFile(String fileId);
 }

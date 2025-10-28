@@ -168,6 +168,28 @@ class StorageDataSourceImpl implements StorageDataSource {
       throw Exception(apiMessage);
     }
   }
+
+  @override
+  Future<List<int>> downloadFile(String fileId) async {
+    try {
+      final Response<dynamic> res = await _apiService.downloadFile(fileId);
+
+      print('Download response status: ${res.statusCode}');
+      print('Download response isSuccessful: ${res.isSuccessful}');
+      print('Download response body type: ${res.body.runtimeType}');
+      print('Download response bodyBytes length: ${res.bodyBytes.length}');
+
+      if (!res.isSuccessful) {
+        throw Exception('Failed to download file (${res.statusCode})');
+      }
+
+      // Return bodyBytes directly
+      return res.bodyBytes;
+    } catch (e) {
+      print('Download error: $e');
+      rethrow;
+    }
+  }
 }
 
 final storageDataSourceProvider = Provider<StorageDataSource>((ref) {

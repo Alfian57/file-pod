@@ -83,6 +83,17 @@ class StorageRepositoryImpl implements StorageRepository {
       return Left(msg);
     }
   }
+
+  @override
+  Future<Either<String, List<int>>> downloadFile(String fileId) async {
+    try {
+      final fileBytes = await storageDataSource.downloadFile(fileId);
+      return Right(fileBytes);
+    } catch (e) {
+      final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+      return Left(msg);
+    }
+  }
 }
 
 final storageRepositoryProvider = Provider<StorageRepository>((ref) {

@@ -83,4 +83,11 @@ final class _$StorageApiService extends StorageApiService {
       $request,
     );
   }
+
+  @override
+  Future<Response<dynamic>> downloadFile(String id) {
+    final Uri $url = Uri.parse('/api/my-storage/file/${id}');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
 }

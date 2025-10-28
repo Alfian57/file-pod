@@ -7,4 +7,5 @@ abstract class StorageDataSource {
   Future<void> deleteFolder(String folderId);
   Future<void> uploadFile(String filePath, String? folderId);
   Future<void> deleteFile(String fileId);
+  Future<List<int>> downloadFile(String fileId);
 }
