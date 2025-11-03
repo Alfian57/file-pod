@@ -7,4 +7,5 @@ class RouteNames {
   static const String storage = '/storage';
   static const String storageDetail = '/storage-detail';
   static const String storageStat = '/storage-stat';
+  static const String profile = '/profile';
 }

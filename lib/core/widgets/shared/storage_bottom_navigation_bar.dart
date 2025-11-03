@@ -9,6 +9,8 @@ class StorageBottomNavigationBar extends StatelessWidget {
   int _getCurrentIndex(String location) {
     if (location.startsWith(RouteNames.storageStat)) {
       return 1;
+    } else if (location.startsWith(RouteNames.profile)) {
+      return 2;
     } else if (location.startsWith(RouteNames.storage)) {
       return 0;
     }
@@ -17,7 +19,7 @@ class StorageBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final location = GoRouterState.of(context).matchedLocation; 
+    final location = GoRouterState.of(context).matchedLocation;
     final currentIndex = _getCurrentIndex(location);
 
     return BottomNavigationBar(
@@ -38,7 +40,7 @@ class StorageBottomNavigationBar extends StatelessWidget {
         } else if (index == 1) {
           context.goNamed(RouteNames.storageStat);
         } else if (index == 2) {
-          context.goNamed(RouteNames.storage);
+          context.goNamed(RouteNames.profile);
         }
       },
     );

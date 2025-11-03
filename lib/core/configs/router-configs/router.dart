@@ -3,6 +3,7 @@ import 'package:file_pod/core/constants/storage_keys.dart';
 import 'package:file_pod/core/providers/auth_state_provider.dart';
 import 'package:file_pod/core/providers/secure_storage_provider.dart';
 import 'package:file_pod/core/utils/go_router_refresh_stream.dart';
+import 'package:file_pod/features/profile/presentation/screens/profile_screen.dart';
 import 'package:file_pod/features/storage/presentation/screens/storage_detail_screen.dart';
 import 'package:file_pod/features/storage/presentation/screens/storage_screen.dart';
 import 'package:file_pod/features/storage/presentation/screens/storage_stat_screen.dart';
@@ -91,6 +92,11 @@ final routerProvider = Provider((ref) {
         name: RouteNames.storageStat,
         path: RouteNames.storageStat,
         builder: (context, state) => StorageStatScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.profile,
+        path: RouteNames.profile,
+        builder: (context, state) => const ProfileScreen(),
       ),
     ],
   );

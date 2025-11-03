@@ -2,6 +2,7 @@ import 'package:chopper/chopper.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_pod/features/auth/data/data-source/auth_api_service.dart';
+import 'package:file_pod/features/profile/data/data-source/profile_api_service.dart';
 import 'package:file_pod/features/storage/data/data-source/storage_api_service.dart';
 import 'package:file_pod/core/configs/networking/json_serializable_converter.dart';
 import 'package:file_pod/core/configs/networking/auth_interceptor.dart';
@@ -17,7 +18,11 @@ final apiProvider = Provider<ChopperClient>((ref) {
               'http://localhost:8080')
           .trim(),
     ),
-    services: [AuthApiService.create(), StorageApiService.create()],
+    services: [
+      AuthApiService.create(),
+      ProfileApiService.create(),
+      StorageApiService.create(),
+    ],
     converter: JsonSerializableConverter(),
     errorConverter: JsonConverter(),
     interceptors: [
@@ -33,6 +38,11 @@ final apiProvider = Provider<ChopperClient>((ref) {
 final authApiServiceProvider = Provider<AuthApiService>((ref) {
   final client = ref.watch(apiProvider);
   return client.getService<AuthApiService>();
+});
+
+final profileApiServiceProvider = Provider<ProfileApiService>((ref) {
+  final client = ref.watch(apiProvider);
+  return client.getService<ProfileApiService>();
 });
 
 final storageApiServiceProvider = Provider<StorageApiService>((ref) {
