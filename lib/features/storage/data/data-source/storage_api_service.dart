@@ -1,5 +1,6 @@
 import 'package:chopper/chopper.dart';
 import 'package:file_pod/core/models/api_response_model.dart';
+import 'package:file_pod/features/storage/data/models/share_response_model.dart';
 import 'package:file_pod/features/storage/data/models/storage_model.dart';
 
 part 'storage_api_service.chopper.dart';
@@ -41,6 +42,18 @@ abstract class StorageApiService extends ChopperService {
 
   @GET(path: '/file/{id}')
   Future<Response<dynamic>> downloadFile(@Path('id') String id);
+
+  @POST(path: '/file/{id}/share')
+  Future<Response<ApiResponseModel<ShareResponseModel>>> shareFile(
+    @Path('id') String id,
+    @Body() Map<String, dynamic> body,
+  );
+
+  @POST(path: '/folder/{id}/share')
+  Future<Response<ApiResponseModel<ShareResponseModel>>> shareFolder(
+    @Path('id') String id,
+    @Body() Map<String, dynamic> body,
+  );
 
   static StorageApiService create([ChopperClient? client]) {
     return _$StorageApiService(client);

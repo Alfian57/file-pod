@@ -115,4 +115,32 @@ final class _$StorageApiService extends StorageApiService {
     final Request $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<ApiResponseModel<ShareResponseModel>>> shareFile(
+    String id,
+    Map<String, dynamic> body,
+  ) {
+    final Uri $url = Uri.parse('/api/my-storage/file/${id}/share');
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client
+        .send<ApiResponseModel<ShareResponseModel>, ShareResponseModel>(
+          $request,
+        );
+  }
+
+  @override
+  Future<Response<ApiResponseModel<ShareResponseModel>>> shareFolder(
+    String id,
+    Map<String, dynamic> body,
+  ) {
+    final Uri $url = Uri.parse('/api/my-storage/folder/${id}/share');
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client
+        .send<ApiResponseModel<ShareResponseModel>, ShareResponseModel>(
+          $request,
+        );
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:file_pod/features/storage/data/data-source/storage_data_source.dart';
 import 'package:file_pod/features/storage/data/data-source/storage_data_source_impl.dart';
+import 'package:file_pod/features/storage/domain/entities/share_response_entity.dart';
 import 'package:file_pod/features/storage/domain/entities/storage_entity.dart';
 import 'package:file_pod/features/storage/domain/repositories/storage_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -101,6 +102,37 @@ class StorageRepositoryImpl implements StorageRepository {
     try {
       final fileBytes = await storageDataSource.downloadFile(fileId);
       return Right(fileBytes);
+    } catch (e) {
+      final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+      return Left(msg);
+    }
+  }
+
+  @override
+  Future<Either<String, ShareResponseEntity>> shareFile(
+    String fileId,
+    String? password,
+  ) async {
+    try {
+      final shareResponse = await storageDataSource.shareFile(fileId, password);
+      return Right(shareResponse);
+    } catch (e) {
+      final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+      return Left(msg);
+    }
+  }
+
+  @override
+  Future<Either<String, ShareResponseEntity>> shareFolder(
+    String folderId,
+    String? password,
+  ) async {
+    try {
+      final shareResponse = await storageDataSource.shareFolder(
+        folderId,
+        password,
+      );
+      return Right(shareResponse);
     } catch (e) {
       final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
       return Left(msg);

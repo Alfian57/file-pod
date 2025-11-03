@@ -1,4 +1,5 @@
 import 'package:file_pod/features/storage/data/repositories/storage_repository_impl.dart';
+import 'package:file_pod/features/storage/domain/entities/share_response_entity.dart';
 import 'package:file_pod/features/storage/domain/entities/storage_entity.dart';
 import 'package:file_pod/features/storage/domain/enums/sort_options.dart';
 import 'package:file_pod/features/storage/domain/repositories/storage_repository.dart';
@@ -135,6 +136,32 @@ class StorageController extends Notifier<StorageState> {
       error: res.fold((error) => error, (_) => null),
     );
     return res.fold((_) => null, (fileBytes) => fileBytes);
+  }
+
+  Future<ShareResponseEntity?> shareFile(
+    String fileId,
+    String? password,
+  ) async {
+    state = state.copyWith(isLoading: true, error: null, clearError: true);
+    final res = await _repo.shareFile(fileId, password);
+    state = state.copyWith(
+      isLoading: false,
+      error: res.fold((error) => error, (_) => null),
+    );
+    return res.fold((_) => null, (shareResponse) => shareResponse);
+  }
+
+  Future<ShareResponseEntity?> shareFolder(
+    String folderId,
+    String? password,
+  ) async {
+    state = state.copyWith(isLoading: true, error: null, clearError: true);
+    final res = await _repo.shareFolder(folderId, password);
+    state = state.copyWith(
+      isLoading: false,
+      error: res.fold((error) => error, (_) => null),
+    );
+    return res.fold((_) => null, (shareResponse) => shareResponse);
   }
 }
 

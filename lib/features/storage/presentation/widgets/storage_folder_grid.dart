@@ -4,6 +4,7 @@ import 'package:file_pod/features/storage/presentation/utils/file_formatter.dart
 import 'package:file_pod/features/storage/presentation/utils/folder_color_provider.dart';
 import 'package:file_pod/features/storage/presentation/widgets/dialogs/delete_folder_dialog.dart';
 import 'package:file_pod/features/storage/presentation/widgets/dialogs/folder_options_bottom_sheet.dart';
+import 'package:file_pod/features/storage/presentation/widgets/dialogs/share_dialog.dart';
 import 'package:file_pod/features/storage/presentation/widgets/empty_states/empty_folders_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:file_pod/features/storage/presentation/widgets/folder_card.dart';
@@ -23,6 +24,31 @@ class StorageFolderGrid extends ConsumerWidget {
     if (!context.mounted || action == null) return;
 
     switch (action) {
+      case FolderAction.share:
+        final password = await ShareDialog.show(
+          context: context,
+          title: 'Share Folder',
+        );
+
+        if (!context.mounted || password == null) return;
+
+        final shareResponse = await ref
+            .read(storageControllerProvider.notifier)
+            .shareFolder(folderId, password.isEmpty ? null : password);
+
+        if (!context.mounted) return;
+
+        if (shareResponse != null) {
+          ShareDialog.showShareResult(
+            context: context,
+            shareUrl: shareResponse.shareUrl,
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to share folder')),
+          );
+        }
+        break;
       case FolderAction.delete:
         await DeleteFolderDialog.show(
           context: context,

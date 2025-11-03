@@ -4,9 +4,11 @@ import 'package:file_pod/core/providers/api_provider.dart';
 import 'package:file_pod/core/utils/api_message_extractor.dart';
 import 'package:file_pod/features/storage/data/data-source/storage_api_service.dart';
 import 'package:file_pod/features/storage/data/data-source/storage_data_source.dart';
+import 'package:file_pod/features/storage/data/models/share_response_model.dart';
 import 'package:file_pod/features/storage/data/models/storage_model.dart';
 import 'package:file_pod/features/storage/domain/entities/file_entity.dart';
 import 'package:file_pod/features/storage/domain/entities/folder_entity.dart';
+import 'package:file_pod/features/storage/domain/entities/share_response_entity.dart';
 import 'package:file_pod/features/storage/domain/entities/storage_entity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -187,6 +189,69 @@ class StorageDataSourceImpl implements StorageDataSource {
     } catch (e) {
       rethrow;
     }
+  }
+
+  @override
+  Future<ShareResponseEntity> shareFile(String fileId, String? password) async {
+    final body = <String, dynamic>{};
+    if (password != null && password.isNotEmpty) {
+      body['password'] = password;
+    }
+
+    final Response<ApiResponseModel<ShareResponseModel>> res = await _apiService
+        .shareFile(fileId, body);
+
+    if (!res.isSuccessful) {
+      final maybeMsgFromBody = extractApiMessage(res.body);
+      final apiMessage =
+          maybeMsgFromBody ??
+          extractApiMessage(res.error) ??
+          'Failed to share file (${res.statusCode})';
+      throw Exception(apiMessage);
+    }
+
+    final shareData = res.body?.data;
+    if (shareData == null) {
+      throw Exception('Share file response missing data');
+    }
+
+    return ShareResponseEntity(
+      linkToken: shareData.linkToken,
+      shareUrl: shareData.shareUrl,
+    );
+  }
+
+  @override
+  Future<ShareResponseEntity> shareFolder(
+    String folderId,
+    String? password,
+  ) async {
+    final body = <String, dynamic>{};
+    if (password != null && password.isNotEmpty) {
+      body['password'] = password;
+    }
+
+    final Response<ApiResponseModel<ShareResponseModel>> res = await _apiService
+        .shareFolder(folderId, body);
+
+    if (!res.isSuccessful) {
+      final maybeMsgFromBody = extractApiMessage(res.body);
+      final apiMessage =
+          maybeMsgFromBody ??
+          extractApiMessage(res.error) ??
+          'Failed to share folder (${res.statusCode})';
+      throw Exception(apiMessage);
+    }
+
+    final shareData = res.body?.data;
+    if (shareData == null) {
+      throw Exception('Share folder response missing data');
+    }
+
+    return ShareResponseEntity(
+      linkToken: shareData.linkToken,
+      shareUrl: shareData.shareUrl,
+    );
   }
 }
 

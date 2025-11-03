@@ -1,3 +1,4 @@
+import 'package:file_pod/features/storage/domain/entities/share_response_entity.dart';
 import 'package:file_pod/features/storage/domain/entities/storage_entity.dart';
 
 abstract class StorageDataSource {
@@ -12,4 +13,6 @@ abstract class StorageDataSource {
   Future<void> uploadFile(String filePath, String? folderId);
   Future<void> deleteFile(String fileId);
   Future<List<int>> downloadFile(String fileId);
+  Future<ShareResponseEntity> shareFile(String fileId, String? password);
+  Future<ShareResponseEntity> shareFolder(String folderId, String? password);
 }
