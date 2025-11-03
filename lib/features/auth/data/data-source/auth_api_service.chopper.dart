@@ -31,10 +31,21 @@ final class _$AuthApiService extends AuthApiService {
   }
 
   @override
-  Future<Response<Map<String, dynamic>>> register(Map<String, dynamic> body) {
+  Future<Response<ApiResponseModel<dynamic>>> register(
+    Map<String, dynamic> body,
+  ) {
     final Uri $url = Uri.parse('/api/auth/register');
     final $body = body;
     final Request $request = Request('POST', $url, client.baseUrl, body: $body);
-    return client.send<Map<String, dynamic>, Map<String, dynamic>>($request);
+    return client.send<ApiResponseModel<dynamic>, ApiResponseModel<dynamic>>(
+      $request,
+    );
+  }
+
+  @override
+  Future<Response<ApiResponseModel<UserModel>>> getCurrentUser() {
+    final Uri $url = Uri.parse('/api/auth/user');
+    final Request $request = Request('POST', $url, client.baseUrl);
+    return client.send<ApiResponseModel<UserModel>, UserModel>($request);
   }
 }

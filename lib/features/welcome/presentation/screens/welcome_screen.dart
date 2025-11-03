@@ -1,7 +1,7 @@
 import 'package:file_pod/features/welcome/presentation/widgets/welcome_background.dart';
 import 'package:file_pod/features/welcome/presentation/widgets/welcome_header.dart';
 import 'package:file_pod/features/welcome/presentation/widgets/welcome_actions.dart';
-import 'package:file_pod/core/widgets/social_login.dart';
+import 'package:file_pod/core/widgets/shared/social_login.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {

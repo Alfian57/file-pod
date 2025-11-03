@@ -8,6 +8,7 @@ class FolderCard extends StatelessWidget {
     required this.bgColor,
     required this.iconColor,
     required this.textColor,
+    this.onMorePressed,
   });
 
   final String title;
@@ -15,6 +16,7 @@ class FolderCard extends StatelessWidget {
   final Color bgColor;
   final Color iconColor;
   final Color textColor;
+  final VoidCallback? onMorePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +47,13 @@ class FolderCard extends StatelessWidget {
                   ),
                   child: Icon(Icons.folder, color: iconColor, size: 18),
                 ),
-                Icon(
-                  Icons.more_vert,
-                  size: 18,
-                  color: colorScheme.onSurface.withAlpha((0.6 * 255).round()),
+                GestureDetector(
+                  onTap: onMorePressed,
+                  child: Icon(
+                    Icons.more_vert,
+                    size: 18,
+                    color: colorScheme.onSurface.withAlpha((0.6 * 255).round()),
+                  ),
                 ),
               ],
             ),

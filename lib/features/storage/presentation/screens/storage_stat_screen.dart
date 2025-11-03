@@ -1,10 +1,11 @@
+import 'package:file_pod/core/widgets/shared/storage_app_bar.dart';
+import 'package:file_pod/core/widgets/shared/storage_bottom_navigation_bar.dart';
 import 'package:file_pod/features/storage/presentation/widgets/storage_stat_donut_chart.dart';
 import 'package:file_pod/features/storage/presentation/widgets/storage_stat_donut_chart_painter.dart';
 import 'package:file_pod/features/storage/presentation/widgets/storage_stat_export_button.dart';
 import 'package:file_pod/features/storage/presentation/widgets/storage_stat_list.dart';
 import 'package:file_pod/features/storage/presentation/widgets/storage_stat_available_info.dart';
 import 'package:flutter/material.dart';
-import 'package:file_pod/theme.dart';
 
 class StorageStatScreen extends StatelessWidget {
   const StorageStatScreen({super.key});
@@ -15,20 +16,7 @@ class StorageStatScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: theme.scaffoldBackgroundColor,
-        foregroundColor: AppTheme.textPrimary,
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios_new),
-        ),
-        title: Text('Storage Details', style: theme.textTheme.headlineSmall),
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.more_horiz)),
-        ],
-      ),
+      appBar: StorageAppBar(title: "Storage Statistics"),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Column(
@@ -56,6 +44,7 @@ class StorageStatScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: StorageBottomNavigationBar(),
     );
   }
 }

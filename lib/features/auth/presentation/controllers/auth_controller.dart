@@ -1,3 +1,4 @@
+import 'package:file_pod/core/providers/auth_state_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:file_pod/features/auth/domain/entities/user_entity.dart';
@@ -39,6 +40,12 @@ class AuthController extends Notifier<AuthState> {
       isLoading: false,
       error: res.fold((l) => l, (_) => null),
     );
+
+    // Update auth state after successful login
+    res.fold(
+      (_) => null,
+      (_) => ref.read(authStateProvider.notifier).setAuthenticated(true),
+    );
   }
 
   Future<void> register(UserEntity user) async {
@@ -48,6 +55,11 @@ class AuthController extends Notifier<AuthState> {
       isLoading: false,
       error: res.fold((l) => l, (_) => null),
     );
+  }
+
+  Future<void> logout() async {
+    await _repo.logout();
+    ref.read(authStateProvider.notifier).setAuthenticated(false);
   }
 }
 

@@ -1,13 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:file_pod/theme.dart';
 
-class RecentUploadItem extends StatelessWidget {
-  const RecentUploadItem({super.key});
+class FileItem extends StatelessWidget {
+  const FileItem({
+    super.key,
+    required this.fileName,
+    required this.fileDate,
+    required this.fileSize,
+    this.onMorePressed,
+  });
+
+  final String fileName;
+  final String fileDate;
+  final String fileSize;
+  final VoidCallback? onMorePressed;
+
+  IconData _getFileIcon(String fileName) {
+    final extension = fileName.split('.').last.toLowerCase();
+    switch (extension) {
+      case 'pdf':
+        return Icons.picture_as_pdf;
+      case 'doc':
+      case 'docx':
+        return Icons.description;
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+        return Icons.image;
+      case 'zip':
+      case 'rar':
+        return Icons.folder_zip;
+      case 'mp4':
+      case 'avi':
+      case 'mov':
+        return Icons.video_file;
+      case 'mp3':
+      case 'wav':
+        return Icons.audio_file;
+      default:
+        return Icons.insert_drive_file;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 14),
       decoration: BoxDecoration(color: Colors.transparent),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -21,7 +60,7 @@ class RecentUploadItem extends StatelessWidget {
             ),
             child: Center(
               child: Icon(
-                Icons.insert_drive_file,
+                _getFileIcon(fileName),
                 color: AppTheme.primary,
                 size: 26,
               ),
@@ -34,7 +73,9 @@ class RecentUploadItem extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Projects.docx',
+                  fileName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: AppTheme.textPrimary,
                     fontWeight: FontWeight.w700,
@@ -42,7 +83,7 @@ class RecentUploadItem extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'November 22, 2020',
+                  fileDate,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppTheme.textSecondary,
                   ),
@@ -52,10 +93,15 @@ class RecentUploadItem extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Text(
-            '300kb',
+            fileSize,
             style: Theme.of(
               context,
             ).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondary),
+          ),
+          IconButton(
+            onPressed: onMorePressed,
+            icon: const Icon(Icons.more_vert),
+            iconSize: 20,
           ),
         ],
       ),

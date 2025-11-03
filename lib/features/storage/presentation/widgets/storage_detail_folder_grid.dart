@@ -1,48 +1,92 @@
+import 'package:file_pod/features/storage/presentation/controllers/storage_controller.dart';
+import 'package:file_pod/features/storage/presentation/screens/storage_detail_screen.dart';
+import 'package:file_pod/features/storage/presentation/utils/file_formatter.dart';
+import 'package:file_pod/features/storage/presentation/utils/folder_color_provider.dart';
+import 'package:file_pod/features/storage/presentation/widgets/dialogs/delete_folder_dialog.dart';
+import 'package:file_pod/features/storage/presentation/widgets/dialogs/folder_options_bottom_sheet.dart';
+import 'package:file_pod/features/storage/presentation/widgets/empty_states/empty_folders_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:file_pod/features/storage/presentation/widgets/folder_card.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class StorageDetailFolderGrid extends StatelessWidget {
-  const StorageDetailFolderGrid({super.key});
+class StorageDetailFolderGrid extends ConsumerWidget {
+  const StorageDetailFolderGrid({super.key, required this.parentFolderId});
+
+  final String parentFolderId;
+
+  Future<void> _handleFolderOptions(
+    BuildContext context,
+    WidgetRef ref,
+    String folderId,
+    String folderName,
+  ) async {
+    final action = await FolderOptionsBottomSheet.show(context: context);
+
+    if (!context.mounted || action == null) return;
+
+    switch (action) {
+      case FolderAction.delete:
+        await DeleteFolderDialog.show(
+          context: context,
+          ref: ref,
+          folderId: folderId,
+          folderName: folderName,
+          onSuccess: () {
+            ref
+                .read(storageControllerProvider.notifier)
+                .getStorageDetail(parentFolderId);
+          },
+        );
+        break;
+    }
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return GridView.count(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final storageState = ref.watch(storageControllerProvider);
+    final storageDetail = storageState.storageDetail;
+
+    if (storageDetail == null || storageDetail.folders.isEmpty) {
+      return const EmptyFoldersWidget();
+    }
+
+    return GridView.builder(
       shrinkWrap: true,
-      crossAxisCount: 2,
-      crossAxisSpacing: 16,
-      mainAxisSpacing: 16,
-      childAspectRatio: 1.45,
       physics: const NeverScrollableScrollPhysics(),
-      children: [
-        FolderCard(
-          title: 'Mobile Apps',
-          date: 'December 20, 2020',
-          bgColor: const Color(0xFFEAF5FF),
-          iconColor: const Color(0xFF4B6BE6),
-          textColor: const Color(0xFF4B6BE6),
-        ),
-        FolderCard(
-          title: 'SVG Icons',
-          date: 'December 14, 2020',
-          bgColor: const Color(0xFFFFF6E6),
-          iconColor: const Color(0xFFF5B400),
-          textColor: const Color(0xFFF5B400),
-        ),
-        FolderCard(
-          title: 'Prototypes',
-          date: 'November 22, 2020',
-          bgColor: const Color(0xFFFFEFEF),
-          iconColor: const Color(0xFFD94B48),
-          textColor: const Color(0xFFD94B48),
-        ),
-        FolderCard(
-          title: 'Avatars',
-          date: 'November 10, 2020',
-          bgColor: const Color(0xFFE8FFFB),
-          iconColor: const Color(0xFF13C8B7),
-          textColor: const Color(0xFF13C8B7),
-        ),
-      ],
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 1.45,
+      ),
+      itemCount: storageDetail.folders.length,
+      itemBuilder: (context, index) {
+        final folder = storageDetail.folders[index];
+        final colors = FolderColorProvider.getColorForIndex(index);
+
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => StorageDetailScreen(
+                  folderId: folder.id,
+                  folderName: folder.name,
+                ),
+              ),
+            );
+          },
+          child: FolderCard(
+            title: folder.name,
+            date: FileFormatter.formatDate(folder.createdAt),
+            bgColor: colors.background,
+            iconColor: colors.icon,
+            textColor: colors.text,
+            onMorePressed: () =>
+                _handleFolderOptions(context, ref, folder.id, folder.name),
+          ),
+        );
+      },
     );
   }
 }

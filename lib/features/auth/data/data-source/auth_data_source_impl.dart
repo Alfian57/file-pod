@@ -7,6 +7,7 @@ import 'package:file_pod/features/auth/data/data-source/auth_api_service.dart';
 import 'package:file_pod/core/utils/api_message_extractor.dart';
 import 'package:file_pod/features/auth/data/data-source/auth_data_source.dart';
 import 'package:file_pod/features/auth/data/models/login_data_model.dart';
+import 'package:file_pod/features/auth/data/models/user_model.dart';
 import 'package:file_pod/features/auth/domain/entities/user_entity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -23,8 +24,30 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   Future<UserEntity> getCurrentUser() async {
-    // TODO: Implement proper user fetching from API if needed
-    return UserEntity(name: 'Guest', email: '');
+    final Response<ApiResponseModel<UserModel>> res = await _apiService
+        .getCurrentUser();
+
+    if (!res.isSuccessful) {
+      final maybeMsgFromBody = extractApiMessage(res.body);
+      final apiMessage =
+          maybeMsgFromBody ??
+          extractApiMessage(res.error) ??
+          'Failed to get user (${res.statusCode})';
+      throw Exception(apiMessage);
+    }
+
+    final userData = res.body?.data;
+    if (userData == null) {
+      throw Exception('User response missing data');
+    }
+
+    return UserEntity(
+      name: userData.name ?? '',
+      email: userData.email,
+      profilePictureUrl: userData.profilePictureUrl,
+      storageQuotaBytes: userData.storageQuotaBytes,
+      storageUsedBytes: userData.storageUsedBytes,
+    );
   }
 
   @override
@@ -50,9 +73,10 @@ class AuthDataSourceImpl implements AuthDataSource {
     final accessToken = loginData.accessToken;
     final refreshToken = loginData.refreshToken;
     final user = loginData.user;
+
     await _storage.write(key: StorageKeys.accessToken, value: accessToken);
     await _storage.write(key: StorageKeys.refreshToken, value: refreshToken);
-    await _storage.write(key: StorageKeys.userName, value: user.name);
+    await _storage.write(key: StorageKeys.userName, value: user.name ?? '');
     await _storage.write(key: StorageKeys.userEmail, value: user.email);
     await _storage.write(
       key: StorageKeys.userProfilePictureUrl,
@@ -68,7 +92,9 @@ class AuthDataSourceImpl implements AuthDataSource {
       'password': user.password,
     };
 
-    final Response<Map<String, dynamic>> res = await _apiService.register(body);
+    final Response<ApiResponseModel<dynamic>> res = await _apiService.register(
+      body,
+    );
 
     if (res.statusCode != 201 && !res.isSuccessful) {
       final maybeMsgFromBody = extractApiMessage(res.body);

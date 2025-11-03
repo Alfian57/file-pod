@@ -1,33 +1,21 @@
+import 'package:file_pod/features/storage/presentation/widgets/storage_sort_button.dart';
 import 'package:flutter/material.dart';
-import 'package:file_pod/theme.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class StorageDetailFolderHeader extends StatelessWidget {
-  const StorageDetailFolderHeader({super.key});
+class StorageDetailFolderHeader extends ConsumerWidget {
+  const StorageDetailFolderHeader({super.key, required this.onSortChanged});
+
+  final VoidCallback onSortChanged;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text('My Folders', style: theme.textTheme.headlineSmall),
-        Row(
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.add, color: AppTheme.textPrimary),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.tune, color: AppTheme.textPrimary),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.arrow_forward_ios, color: AppTheme.textPrimary),
-            ),
-          ],
-        ),
+        Row(children: [StorageSortButton(onSortChanged: onSortChanged)]),
       ],
     );
   }

@@ -5,10 +5,16 @@ import 'package:chopper/chopper.dart';
 import 'package:file_pod/core/models/api_response_model.dart';
 import 'package:file_pod/features/auth/data/models/login_data_model.dart';
 import 'package:file_pod/features/auth/data/models/user_model.dart';
+import 'package:file_pod/features/storage/data/models/storage_model.dart';
+import 'package:file_pod/features/storage/data/models/folder_model.dart';
+import 'package:file_pod/features/storage/data/models/file_model.dart';
 
 final Map<Type, Function> _jsonFactories = {
   LoginDataModel: (json) => LoginDataModel.fromJson(json),
   UserModel: (json) => UserModel.fromJson(json),
+  StorageModel: (json) => StorageModel.fromJson(json),
+  FolderModel: (json) => FolderModel.fromJson(json),
+  FileModel: (json) => FileModel.fromJson(json),
   // Add other model factories here
 };
 
@@ -71,17 +77,15 @@ class JsonSerializableConverter extends JsonConverter {
         );
       }
 
-      final body = ApiResponseModel.fromJson(jsonBody, (_) => null) as BodyType;
-      return response.copyWith<BodyType>(body: body);
+      final apiResponse = ApiResponseModel.fromJson(jsonBody, (_) => null);
+      return response.copyWith<BodyType>(body: apiResponse as BodyType);
     }
 
-    final body =
-        ApiResponseModel.fromJson(
-              jsonBody,
-              (dataJson) => innerFactory(dataJson as Map<String, dynamic>),
-            )
-            as BodyType;
+    final apiResponse = ApiResponseModel<InnerType>.fromJson(
+      jsonBody,
+      (dataJson) => innerFactory(dataJson as Map<String, dynamic>) as InnerType,
+    );
 
-    return response.copyWith<BodyType>(body: body);
+    return response.copyWith<BodyType>(body: apiResponse as BodyType);
   }
 }
