@@ -2,7 +2,6 @@ import 'package:file_pod/core/widgets/shared/storage_app_bar.dart';
 import 'package:file_pod/features/storage/presentation/controllers/storage_controller.dart';
 import 'package:file_pod/features/storage/presentation/widgets/storage_detail_folder_grid.dart';
 import 'package:file_pod/features/storage/presentation/widgets/storage_detail_folder_header.dart';
-import 'package:file_pod/features/storage/presentation/widgets/storage_detail_file_header.dart';
 import 'package:file_pod/features/storage/presentation/widgets/storage_detail_file_list.dart';
 import 'package:file_pod/features/storage/presentation/widgets/create_folder_dialog.dart';
 import 'package:flutter/material.dart';
@@ -112,11 +111,17 @@ class _StorageDetailScreenState extends ConsumerState<StorageDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    StorageDetailFolderHeader(),
+                    StorageDetailFolderHeader(
+                      onSortChanged: () {
+                        ref
+                            .read(storageControllerProvider.notifier)
+                            .getStorageDetail(widget.folderId);
+                      },
+                    ),
                     const SizedBox(height: 12),
                     StorageDetailFolderGrid(parentFolderId: widget.folderId),
                     const SizedBox(height: 28),
-                    StorageDetailFileHeader(),
+                    Text('My Files', style: theme.textTheme.headlineSmall),
                     const SizedBox(height: 12),
                     StorageDetailFileList(folderId: widget.folderId),
                     const SizedBox(height: 40),

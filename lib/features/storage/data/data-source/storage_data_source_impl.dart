@@ -17,9 +17,9 @@ class StorageDataSourceImpl implements StorageDataSource {
   final StorageApiService _apiService;
 
   @override
-  Future<StorageEntity> getStorage() async {
+  Future<StorageEntity> getStorage({String? sortBy, String? sortOrder}) async {
     final Response<ApiResponseModel<StorageModel>> res = await _apiService
-        .getStorage();
+        .getStorage(sortBy: sortBy, sortOrder: sortOrder);
 
     if (!res.isSuccessful) {
       final maybeMsgFromBody = extractApiMessage(res.body);
@@ -61,9 +61,13 @@ class StorageDataSourceImpl implements StorageDataSource {
   }
 
   @override
-  Future<StorageEntity> getStorageDetail(String folderId) async {
+  Future<StorageEntity> getStorageDetail(
+    String folderId, {
+    String? sortBy,
+    String? sortOrder,
+  }) async {
     final Response<ApiResponseModel<StorageModel>> res = await _apiService
-        .getStorageDetail(folderId);
+        .getStorageDetail(folderId, sortBy: sortBy, sortOrder: sortOrder);
 
     if (!res.isSuccessful) {
       final maybeMsgFromBody = extractApiMessage(res.body);

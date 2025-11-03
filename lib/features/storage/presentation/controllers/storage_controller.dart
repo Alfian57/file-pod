@@ -1,5 +1,6 @@
 import 'package:file_pod/features/storage/data/repositories/storage_repository_impl.dart';
 import 'package:file_pod/features/storage/domain/entities/storage_entity.dart';
+import 'package:file_pod/features/storage/domain/enums/sort_options.dart';
 import 'package:file_pod/features/storage/domain/repositories/storage_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,18 +10,24 @@ class StorageState {
     this.error,
     this.storage,
     this.storageDetail,
+    this.sortBy = SortBy.createdAt,
+    this.sortOrder = SortOrder.asc,
   });
 
   final bool isLoading;
   final String? error;
   final StorageEntity? storage;
   final StorageEntity? storageDetail;
+  final SortBy sortBy;
+  final SortOrder sortOrder;
 
   StorageState copyWith({
     bool? isLoading,
     String? error,
     StorageEntity? storage,
     StorageEntity? storageDetail,
+    SortBy? sortBy,
+    SortOrder? sortOrder,
     bool clearError = false,
   }) {
     final resolvedError = clearError ? null : (error ?? this.error);
@@ -29,6 +36,8 @@ class StorageState {
       error: resolvedError,
       storage: storage ?? this.storage,
       storageDetail: storageDetail ?? this.storageDetail,
+      sortBy: sortBy ?? this.sortBy,
+      sortOrder: sortOrder ?? this.sortOrder,
     );
   }
 }
@@ -45,7 +54,10 @@ class StorageController extends Notifier<StorageState> {
 
   Future<void> getStorage() async {
     state = state.copyWith(isLoading: true, error: null, clearError: true);
-    final res = await _repo.getStorage();
+    final res = await _repo.getStorage(
+      sortBy: state.sortBy.value,
+      sortOrder: state.sortOrder.value,
+    );
     state = state.copyWith(
       isLoading: false,
       storage: res.fold((_) => null, (storage) => storage),
@@ -55,12 +67,28 @@ class StorageController extends Notifier<StorageState> {
 
   Future<void> getStorageDetail(String folderId) async {
     state = state.copyWith(isLoading: true, error: null, clearError: true);
-    final res = await _repo.getStorageDetail(folderId);
+    final res = await _repo.getStorageDetail(
+      folderId,
+      sortBy: state.sortBy.value,
+      sortOrder: state.sortOrder.value,
+    );
     state = state.copyWith(
       isLoading: false,
       storageDetail: res.fold((_) => null, (storage) => storage),
       error: res.fold((error) => error, (_) => null),
     );
+  }
+
+  void setSortBy(SortBy sortBy) {
+    state = state.copyWith(sortBy: sortBy);
+  }
+
+  void setSortOrder(SortOrder sortOrder) {
+    state = state.copyWith(sortOrder: sortOrder);
+  }
+
+  void updateSortOptions(SortBy sortBy, SortOrder sortOrder) {
+    state = state.copyWith(sortBy: sortBy, sortOrder: sortOrder);
   }
 
   Future<void> createFolder(String name, String? parentFolderId) async {

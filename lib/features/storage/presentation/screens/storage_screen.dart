@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../theme.dart';
 import '../widgets/storage_folder_header.dart';
 import '../widgets/storage_folder_grid.dart';
-import '../widgets/storage_file_header.dart';
 import '../widgets/storage_file_list.dart';
 import '../widgets/create_folder_dialog.dart';
 import '../widgets/storage_action_menu.dart';
@@ -68,6 +67,7 @@ class _StorageScreenState extends ConsumerState<StorageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final storageState = ref.watch(storageControllerProvider);
 
     // Show error message if any
@@ -96,11 +96,17 @@ class _StorageScreenState extends ConsumerState<StorageScreen> {
                   children: [
                     StorageFolderSearch(),
                     const SizedBox(height: 20),
-                    StorageFolderHeader(),
+                    StorageFolderHeader(
+                      onSortChanged: () {
+                        ref
+                            .read(storageControllerProvider.notifier)
+                            .getStorage();
+                      },
+                    ),
                     const SizedBox(height: 18),
                     StorageFolderGrid(),
                     const SizedBox(height: 28),
-                    StorageFileHeader(),
+                    Text('My Files', style: theme.textTheme.headlineSmall),
                     const SizedBox(height: 12),
                     StorageFileList(),
                     const SizedBox(height: 40),

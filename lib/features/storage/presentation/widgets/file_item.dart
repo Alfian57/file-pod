@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:file_pod/theme.dart';
 
-class RecentUploadItem extends StatelessWidget {
-  const RecentUploadItem({
+class FileItem extends StatelessWidget {
+  const FileItem({
     super.key,
     required this.fileName,
     required this.fileDate,
@@ -46,7 +46,7 @@ class RecentUploadItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 14),
       decoration: BoxDecoration(color: Colors.transparent),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,

@@ -7,12 +7,17 @@ part 'storage_api_service.chopper.dart';
 @ChopperApi(baseUrl: '/api/my-storage')
 abstract class StorageApiService extends ChopperService {
   @GET(path: '')
-  Future<Response<ApiResponseModel<StorageModel>>> getStorage();
+  Future<Response<ApiResponseModel<StorageModel>>> getStorage({
+    @Query('sortBy') String? sortBy,
+    @Query('sortOrder') String? sortOrder,
+  });
 
   @GET(path: '/{id}')
   Future<Response<ApiResponseModel<StorageModel>>> getStorageDetail(
-    @Path('id') String id,
-  );
+    @Path('id') String id, {
+    @Query('sortBy') String? sortBy,
+    @Query('sortOrder') String? sortOrder,
+  });
 
   @POST(path: '/folder')
   Future<Response<ApiResponseModel<dynamic>>> createFolder(

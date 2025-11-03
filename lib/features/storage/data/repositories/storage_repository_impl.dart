@@ -11,9 +11,15 @@ class StorageRepositoryImpl implements StorageRepository {
   final StorageDataSource storageDataSource;
 
   @override
-  Future<Either<String, StorageEntity>> getStorage() async {
+  Future<Either<String, StorageEntity>> getStorage({
+    String? sortBy,
+    String? sortOrder,
+  }) async {
     try {
-      final storage = await storageDataSource.getStorage();
+      final storage = await storageDataSource.getStorage(
+        sortBy: sortBy,
+        sortOrder: sortOrder,
+      );
       return Right(storage);
     } catch (e) {
       final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
@@ -23,10 +29,16 @@ class StorageRepositoryImpl implements StorageRepository {
 
   @override
   Future<Either<String, StorageEntity>> getStorageDetail(
-    String folderId,
-  ) async {
+    String folderId, {
+    String? sortBy,
+    String? sortOrder,
+  }) async {
     try {
-      final storage = await storageDataSource.getStorageDetail(folderId);
+      final storage = await storageDataSource.getStorageDetail(
+        folderId,
+        sortBy: sortBy,
+        sortOrder: sortOrder,
+      );
       return Right(storage);
     } catch (e) {
       final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');

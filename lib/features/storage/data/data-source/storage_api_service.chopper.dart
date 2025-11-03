@@ -19,16 +19,41 @@ final class _$StorageApiService extends StorageApiService {
   final Type definitionType = StorageApiService;
 
   @override
-  Future<Response<ApiResponseModel<StorageModel>>> getStorage() {
+  Future<Response<ApiResponseModel<StorageModel>>> getStorage({
+    String? sortBy,
+    String? sortOrder,
+  }) {
     final Uri $url = Uri.parse('/api/my-storage');
-    final Request $request = Request('GET', $url, client.baseUrl);
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'sortBy': sortBy,
+      'sortOrder': sortOrder,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
     return client.send<ApiResponseModel<StorageModel>, StorageModel>($request);
   }
 
   @override
-  Future<Response<ApiResponseModel<StorageModel>>> getStorageDetail(String id) {
+  Future<Response<ApiResponseModel<StorageModel>>> getStorageDetail(
+    String id, {
+    String? sortBy,
+    String? sortOrder,
+  }) {
     final Uri $url = Uri.parse('/api/my-storage/${id}');
-    final Request $request = Request('GET', $url, client.baseUrl);
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'sortBy': sortBy,
+      'sortOrder': sortOrder,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
     return client.send<ApiResponseModel<StorageModel>, StorageModel>($request);
   }
 

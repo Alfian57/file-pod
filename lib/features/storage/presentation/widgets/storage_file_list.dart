@@ -5,7 +5,7 @@ import 'package:file_pod/features/storage/presentation/widgets/dialogs/delete_fi
 import 'package:file_pod/features/storage/presentation/widgets/dialogs/file_options_bottom_sheet.dart';
 import 'package:file_pod/features/storage/presentation/widgets/empty_states/empty_files_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:file_pod/features/storage/presentation/widgets/recent_upload_item.dart';
+import 'package:file_pod/features/storage/presentation/widgets/file_item.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class StorageFileList extends ConsumerWidget {
@@ -57,7 +57,7 @@ class StorageFileList extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         for (int i = 0; i < storage.files.length; i++) ...[
-          RecentUploadItem(
+          FileItem(
             fileName: storage.files[i].originalName,
             fileDate: FileFormatter.formatDate(storage.files[i].createdAt),
             fileSize: FileFormatter.formatFileSize(storage.files[i].sizeBytes),
