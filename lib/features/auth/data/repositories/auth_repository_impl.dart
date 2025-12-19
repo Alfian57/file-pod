@@ -36,6 +36,28 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Either<String, Unit>> loginWithGoogle() async {
+    try {
+      await authDataSource.loginWithGoogle();
+      return const Right(unit);
+    } catch (e) {
+      final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+      return Left(msg);
+    }
+  }
+
+  @override
+  Future<Either<String, Unit>> loginWithGitHub() async {
+    try {
+      await authDataSource.loginWithGitHub();
+      return const Right(unit);
+    } catch (e) {
+      final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+      return Left(msg);
+    }
+  }
+
+  @override
   Future<Either<String, Unit>> logout() async {
     try {
       await authDataSource.logout();
@@ -62,3 +84,4 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final ds = ref.read(authDataSourceProvider);
   return AuthRepositoryImpl(authDataSource: ds);
 });
+

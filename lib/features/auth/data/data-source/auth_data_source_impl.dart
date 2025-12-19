@@ -11,6 +11,7 @@ import 'package:file_pod/features/auth/data/models/user_model.dart';
 import 'package:file_pod/features/auth/domain/entities/user_entity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthDataSourceImpl implements AuthDataSource {
   AuthDataSourceImpl({
@@ -21,6 +22,11 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   final AuthApiService _apiService;
   final FlutterSecureStorage _storage;
+
+  // Google Sign-In instance
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'profile'],
+  );
 
   @override
   Future<UserEntity> getCurrentUser() async {
@@ -85,6 +91,71 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
+  Future<void> loginWithGoogle() async {
+    // Trigger the Google Sign-In flow
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    if (googleUser == null) {
+      throw Exception('Google sign-in was cancelled');
+    }
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    final idToken = googleAuth.idToken;
+    if (idToken == null) {
+      throw Exception('Failed to get Google ID token');
+    }
+
+    // Send the ID token to the API
+    final body = {'idToken': idToken};
+    final Response<ApiResponseModel<LoginDataModel>> res = await _apiService
+        .loginWithGoogle(body);
+
+    if (!res.isSuccessful) {
+      final maybeMsgFromBody = extractApiMessage(res.body);
+      final apiMessage =
+          maybeMsgFromBody ??
+          extractApiMessage(res.error) ??
+          'Google login failed (${res.statusCode})';
+      throw Exception(apiMessage);
+    }
+
+    final loginData = res.body?.data;
+    if (loginData == null) {
+      throw Exception('Google login response missing data');
+    }
+
+    await _saveLoginData(loginData);
+  }
+
+  @override
+  Future<void> loginWithGitHub() async {
+    // GitHub OAuth requires a web-based flow
+    // For now, we'll show an error message that GitHub OAuth requires web setup
+    // In production, you would use flutter_web_auth or similar package
+    throw Exception(
+      'GitHub login requires OAuth app configuration. '
+      'Please set up GitHub OAuth and use a web auth flow.',
+    );
+  }
+
+  Future<void> _saveLoginData(LoginDataModel loginData) async {
+    final accessToken = loginData.accessToken;
+    final refreshToken = loginData.refreshToken;
+    final user = loginData.user;
+
+    await _storage.write(key: StorageKeys.accessToken, value: accessToken);
+    await _storage.write(key: StorageKeys.refreshToken, value: refreshToken);
+    await _storage.write(key: StorageKeys.userName, value: user.name ?? '');
+    await _storage.write(key: StorageKeys.userEmail, value: user.email);
+    await _storage.write(
+      key: StorageKeys.userProfilePictureUrl,
+      value: user.profilePictureUrl ?? '',
+    );
+  }
+
+  @override
   Future<void> register(UserEntity user) async {
     final body = {
       'name': user.name,
@@ -108,6 +179,9 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   Future<void> logout() async {
+    // Sign out from Google if user was signed in with Google
+    await _googleSignIn.signOut();
+    
     await _storage.delete(key: StorageKeys.accessToken);
     await _storage.delete(key: StorageKeys.refreshToken);
     await _storage.delete(key: StorageKeys.userName);
@@ -121,3 +195,4 @@ final authDataSourceProvider = Provider<AuthDataSource>((ref) {
   final storage = ref.read(secureStorageProvider);
   return AuthDataSourceImpl(apiService: apiService, storage: storage);
 });
+

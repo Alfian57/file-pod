@@ -76,24 +76,19 @@ class _AppInputState extends State<AppInput> {
                   Icon(widget.icon, size: 22, color: const Color(0xFF6B6F76)),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        if (!_focusNode.hasFocus) _focusNode.requestFocus();
-                      },
-                      child: TextField(
-                        focusNode: _focusNode,
-                        controller: _internalController,
-                        obscureText: widget.obscureText,
-                        keyboardType: widget.keyboardType,
-                        onChanged: state.didChange,
-                        decoration: InputDecoration(
-                          hintText: widget.hintText,
-                          hintStyle: t.titleSmall,
-                          border: InputBorder.none,
-                          isCollapsed: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 16,
-                          ),
+                    child: TextField(
+                      focusNode: _focusNode,
+                      controller: _internalController,
+                      obscureText: widget.obscureText,
+                      keyboardType: widget.keyboardType,
+                      onChanged: state.didChange,
+                      decoration: InputDecoration(
+                        hintText: widget.hintText,
+                        hintStyle: t.titleSmall,
+                        border: InputBorder.none,
+                        isCollapsed: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 16,
                         ),
                       ),
                     ),

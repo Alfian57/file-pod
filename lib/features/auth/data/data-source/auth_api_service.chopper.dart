@@ -45,7 +45,56 @@ final class _$AuthApiService extends AuthApiService {
   @override
   Future<Response<ApiResponseModel<UserModel>>> getCurrentUser() {
     final Uri $url = Uri.parse('/api/auth/user');
-    final Request $request = Request('POST', $url, client.baseUrl);
+    final Request $request = Request('GET', $url, client.baseUrl);
     return client.send<ApiResponseModel<UserModel>, UserModel>($request);
+  }
+
+  @override
+  Future<Response<ApiResponseModel<RefreshTokenDataModel>>> refreshToken(
+    Map<String, dynamic> body,
+  ) {
+    final Uri $url = Uri.parse('/api/auth/refresh-token');
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client
+        .send<ApiResponseModel<RefreshTokenDataModel>, RefreshTokenDataModel>(
+          $request,
+        );
+  }
+
+  @override
+  Future<Response<ApiResponseModel<dynamic>>> logout(
+    Map<String, dynamic> body,
+  ) {
+    final Uri $url = Uri.parse('/api/auth/logout');
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<ApiResponseModel<dynamic>, ApiResponseModel<dynamic>>(
+      $request,
+    );
+  }
+
+  @override
+  Future<Response<ApiResponseModel<LoginDataModel>>> loginWithGoogle(
+    Map<String, dynamic> body,
+  ) {
+    final Uri $url = Uri.parse('/api/auth/google');
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<ApiResponseModel<LoginDataModel>, LoginDataModel>(
+      $request,
+    );
+  }
+
+  @override
+  Future<Response<ApiResponseModel<LoginDataModel>>> loginWithGitHub(
+    Map<String, dynamic> body,
+  ) {
+    final Uri $url = Uri.parse('/api/auth/github');
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<ApiResponseModel<LoginDataModel>, LoginDataModel>(
+      $request,
+    );
   }
 }

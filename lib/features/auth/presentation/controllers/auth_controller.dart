@@ -57,6 +57,36 @@ class AuthController extends Notifier<AuthState> {
     );
   }
 
+  Future<void> loginWithGoogle() async {
+    state = state.copyWith(isLoading: true, error: null, clearError: true);
+    final res = await _repo.loginWithGoogle();
+    state = state.copyWith(
+      isLoading: false,
+      error: res.fold((l) => l, (_) => null),
+    );
+
+    // Update auth state after successful login
+    res.fold(
+      (_) => null,
+      (_) => ref.read(authStateProvider.notifier).setAuthenticated(true),
+    );
+  }
+
+  Future<void> loginWithGitHub() async {
+    state = state.copyWith(isLoading: true, error: null, clearError: true);
+    final res = await _repo.loginWithGitHub();
+    state = state.copyWith(
+      isLoading: false,
+      error: res.fold((l) => l, (_) => null),
+    );
+
+    // Update auth state after successful login
+    res.fold(
+      (_) => null,
+      (_) => ref.read(authStateProvider.notifier).setAuthenticated(true),
+    );
+  }
+
   Future<void> logout() async {
     await _repo.logout();
     ref.read(authStateProvider.notifier).setAuthenticated(false);
@@ -66,3 +96,4 @@ class AuthController extends Notifier<AuthState> {
 final authControllerProvider = NotifierProvider<AuthController, AuthState>(
   AuthController.new,
 );
+

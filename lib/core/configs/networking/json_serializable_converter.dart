@@ -4,15 +4,19 @@ import 'package:chopper/chopper.dart';
 
 import 'package:file_pod/core/models/api_response_model.dart';
 import 'package:file_pod/features/auth/data/models/login_data_model.dart';
+import 'package:file_pod/features/auth/data/models/refresh_token_data_model.dart';
 import 'package:file_pod/features/auth/data/models/user_model.dart';
 import 'package:file_pod/features/storage/data/models/storage_model.dart';
+import 'package:file_pod/features/storage/data/models/storage_statistics_model.dart';
 import 'package:file_pod/features/storage/data/models/folder_model.dart';
 import 'package:file_pod/features/storage/data/models/file_model.dart';
 
 final Map<Type, Function> _jsonFactories = {
   LoginDataModel: (json) => LoginDataModel.fromJson(json),
+  RefreshTokenDataModel: (json) => RefreshTokenDataModel.fromJson(json),
   UserModel: (json) => UserModel.fromJson(json),
   StorageModel: (json) => StorageModel.fromJson(json),
+  StorageStatisticsModel: (json) => StorageStatisticsModel.fromJson(json),
   FolderModel: (json) => FolderModel.fromJson(json),
   FileModel: (json) => FileModel.fromJson(json),
   // Add other model factories here

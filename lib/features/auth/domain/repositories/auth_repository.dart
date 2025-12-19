@@ -6,7 +6,10 @@ abstract class AuthRepository {
     String email,
     String password,
   );
+  Future<Either<String, Unit>> loginWithGoogle();
+  Future<Either<String, Unit>> loginWithGitHub();
   Future<Either<String, Unit>> register(UserEntity user);
   Future<Either<String, Unit>> logout();
   Future<Either<String, UserEntity>> getCurrentUser();
 }
+

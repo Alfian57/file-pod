@@ -58,6 +58,16 @@ final class _$StorageApiService extends StorageApiService {
   }
 
   @override
+  Future<Response<ApiResponseModel<StorageStatisticsModel>>> getStatistics() {
+    final Uri $url = Uri.parse('/api/my-storage/statistics');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client
+        .send<ApiResponseModel<StorageStatisticsModel>, StorageStatisticsModel>(
+          $request,
+        );
+  }
+
+  @override
   Future<Response<ApiResponseModel<dynamic>>> createFolder(
     Map<String, dynamic> body,
   ) {

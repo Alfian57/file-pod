@@ -1,6 +1,7 @@
 import 'package:file_pod/core/configs/router-configs/route_names.dart';
 import 'package:file_pod/core/widgets/ui/app_button.dart';
 import 'package:file_pod/core/widgets/ui/app_input.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:file_pod/theme.dart';
@@ -37,6 +38,14 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             _passwordController.text,
           );
     }
+  }
+
+  void _loginWithGoogle() {
+    ref.read(authControllerProvider.notifier).loginWithGoogle();
+  }
+
+  void _loginWithGitHub() {
+    ref.read(authControllerProvider.notifier).loginWithGitHub();
   }
 
   @override
@@ -125,8 +134,71 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               onPressed: onSubmit,
             ),
           ),
+
+          const SizedBox(height: 24),
+
+          // OR Divider
+          Row(
+            children: [
+              Expanded(child: Divider(color: Colors.grey.shade300)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  'Or continue with',
+                  style: t.bodyMedium?.copyWith(color: Colors.grey.shade600),
+                ),
+              ),
+              Expanded(child: Divider(color: Colors.grey.shade300)),
+            ],
+          ),
+
+          const SizedBox(height: 24),
+
+          // Social Login Buttons
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _loginWithGoogle,
+                  icon: const FaIcon(
+                    FontAwesomeIcons.google,
+                    size: 18,
+                    color: Color(0xFFDB4437),
+                  ),
+                  label: const Text('Google'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    side: BorderSide(color: Colors.grey.shade300),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _loginWithGitHub,
+                  icon: const FaIcon(
+                    FontAwesomeIcons.github,
+                    size: 18,
+                    color: Color(0xFF333333),
+                  ),
+                  label: const Text('GitHub'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    side: BorderSide(color: Colors.grey.shade300),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 }
+

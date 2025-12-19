@@ -2,6 +2,7 @@ import 'package:chopper/chopper.dart';
 import 'package:file_pod/core/models/api_response_model.dart';
 import 'package:file_pod/features/storage/data/models/share_response_model.dart';
 import 'package:file_pod/features/storage/data/models/storage_model.dart';
+import 'package:file_pod/features/storage/data/models/storage_statistics_model.dart';
 
 part 'storage_api_service.chopper.dart';
 
@@ -19,6 +20,9 @@ abstract class StorageApiService extends ChopperService {
     @Query('sortBy') String? sortBy,
     @Query('sortOrder') String? sortOrder,
   });
+
+  @GET(path: '/statistics')
+  Future<Response<ApiResponseModel<StorageStatisticsModel>>> getStatistics();
 
   @POST(path: '/folder')
   Future<Response<ApiResponseModel<dynamic>>> createFolder(
