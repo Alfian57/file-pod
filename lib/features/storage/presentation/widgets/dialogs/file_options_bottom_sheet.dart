@@ -19,6 +19,11 @@ class FileOptionsBottomSheet {
               onTap: () => Navigator.pop(context, FileAction.share),
             ),
             ListTile(
+              leading: const Icon(Icons.edit),
+              title: const Text('Rename'),
+              onTap: () => Navigator.pop(context, FileAction.rename),
+            ),
+            ListTile(
               leading: const Icon(Icons.delete, color: Colors.red),
               title: const Text('Delete', style: TextStyle(color: Colors.red)),
               onTap: () => Navigator.pop(context, FileAction.delete),
@@ -30,4 +35,4 @@ class FileOptionsBottomSheet {
   }
 }
 
-enum FileAction { download, share, delete }
+enum FileAction { download, share, rename, delete }

@@ -22,11 +22,15 @@ final class _$StorageApiService extends StorageApiService {
   Future<Response<ApiResponseModel<StorageModel>>> getStorage({
     String? sortBy,
     String? sortOrder,
+    String? search,
+    String? type,
   }) {
     final Uri $url = Uri.parse('/api/my-storage');
     final Map<String, dynamic> $params = <String, dynamic>{
       'sortBy': sortBy,
       'sortOrder': sortOrder,
+      'search': search,
+      'type': type,
     };
     final Request $request = Request(
       'GET',
@@ -42,11 +46,15 @@ final class _$StorageApiService extends StorageApiService {
     String id, {
     String? sortBy,
     String? sortOrder,
+    String? search,
+    String? type,
   }) {
     final Uri $url = Uri.parse('/api/my-storage/${id}');
     final Map<String, dynamic> $params = <String, dynamic>{
       'sortBy': sortBy,
       'sortOrder': sortOrder,
+      'search': search,
+      'type': type,
     };
     final Request $request = Request(
       'GET',
@@ -152,5 +160,37 @@ final class _$StorageApiService extends StorageApiService {
         .send<ApiResponseModel<ShareResponseModel>, ShareResponseModel>(
           $request,
         );
+  }
+
+  @override
+  Future<Response<ApiResponseModel<FolderModel>>> renameFolder(
+    String id,
+    Map<String, dynamic> body,
+  ) {
+    final Uri $url = Uri.parse('/api/my-storage/folder/${id}/rename');
+    final $body = body;
+    final Request $request = Request(
+      'PATCH',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<ApiResponseModel<FolderModel>, FolderModel>($request);
+  }
+
+  @override
+  Future<Response<ApiResponseModel<FileModel>>> renameFile(
+    String id,
+    Map<String, dynamic> body,
+  ) {
+    final Uri $url = Uri.parse('/api/my-storage/file/${id}/rename');
+    final $body = body;
+    final Request $request = Request(
+      'PATCH',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<ApiResponseModel<FileModel>, FileModel>($request);
   }
 }

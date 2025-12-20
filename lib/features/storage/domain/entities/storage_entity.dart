@@ -3,11 +3,12 @@ import 'package:file_pod/features/storage/domain/entities/file_entity.dart';
 import 'package:file_pod/features/storage/domain/entities/folder_entity.dart';
 
 class StorageEntity extends Equatable {
-  const StorageEntity({required this.folders, required this.files});
+  const StorageEntity({required this.folders, required this.files, this.ancestors = const []});
 
   final List<FolderEntity> folders;
   final List<FileEntity> files;
+  final List<FolderEntity> ancestors;
 
   @override
-  List<Object?> get props => [folders, files];
+  List<Object?> get props => [folders, files, ancestors];
 }

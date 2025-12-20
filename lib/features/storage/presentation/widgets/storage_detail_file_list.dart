@@ -3,6 +3,7 @@ import 'package:file_pod/features/storage/presentation/services/file_download_se
 import 'package:file_pod/features/storage/presentation/utils/file_formatter.dart';
 import 'package:file_pod/features/storage/presentation/widgets/dialogs/delete_file_dialog.dart';
 import 'package:file_pod/features/storage/presentation/widgets/dialogs/file_options_bottom_sheet.dart';
+import 'package:file_pod/features/storage/presentation/widgets/dialogs/rename_dialog.dart';
 import 'package:file_pod/features/storage/presentation/widgets/dialogs/share_dialog.dart';
 import 'package:file_pod/features/storage/presentation/widgets/empty_states/empty_files_widget.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +58,21 @@ class StorageDetailFileList extends ConsumerWidget {
             context,
           ).showSnackBar(const SnackBar(content: Text('Failed to share file')));
         }
+        break;
+      case FileAction.rename:
+        final newName = await RenameDialog.show(
+          context: context,
+          currentName: fileName,
+          type: 'File',
+        );
+
+        if (!context.mounted || newName == null || newName == fileName) return;
+
+        await ref
+            .read(storageControllerProvider.notifier)
+            .renameFile(fileId, newName);
+
+        ref.read(storageControllerProvider.notifier).getStorageDetail(folderId);
         break;
       case FileAction.delete:
         await DeleteFileDialog.show(

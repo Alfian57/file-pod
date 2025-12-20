@@ -13,7 +13,14 @@ StorageModel _$StorageModelFromJson(Map<String, dynamic> json) => StorageModel(
   files: (json['files'] as List<dynamic>)
       .map((e) => FileModel.fromJson(e as Map<String, dynamic>))
       .toList(),
+  ancestors: (json['ancestors'] as List<dynamic>?)
+      ?.map((e) => FolderModel.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$StorageModelToJson(StorageModel instance) =>
-    <String, dynamic>{'folders': instance.folders, 'files': instance.files};
+    <String, dynamic>{
+      'folders': instance.folders,
+      'files': instance.files,
+      'ancestors': instance.ancestors,
+    };

@@ -1,4 +1,5 @@
 import 'package:chopper/chopper.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:file_pod/core/models/api_response_model.dart';
 import 'package:file_pod/core/providers/secure_storage_provider.dart';
 import 'package:file_pod/core/providers/api_provider.dart';
@@ -47,10 +48,19 @@ class AuthDataSourceImpl implements AuthDataSource {
       throw Exception('User response missing data');
     }
 
+    String? profilePic = userData.profilePictureUrl;
+    if (profilePic != null && !profilePic.startsWith('http')) {
+      final baseUrl = dotenv.env['BASE_URL'] ?? 'http://localhost:8080';
+      final cleanBase = baseUrl.endsWith('/')
+          ? baseUrl.substring(0, baseUrl.length - 1)
+          : baseUrl;
+      profilePic = '$cleanBase/media/$profilePic';
+    }
+
     return UserEntity(
       name: userData.name ?? '',
       email: userData.email,
-      profilePictureUrl: userData.profilePictureUrl,
+      profilePictureUrl: profilePic,
       storageQuotaBytes: userData.storageQuotaBytes,
       storageUsedBytes: userData.storageUsedBytes,
     );
@@ -145,13 +155,22 @@ class AuthDataSourceImpl implements AuthDataSource {
     final refreshToken = loginData.refreshToken;
     final user = loginData.user;
 
+    String? profilePic = user.profilePictureUrl;
+    if (profilePic != null && !profilePic.startsWith('http')) {
+      final baseUrl = dotenv.env['BASE_URL'] ?? 'http://localhost:8080';
+      final cleanBase = baseUrl.endsWith('/')
+          ? baseUrl.substring(0, baseUrl.length - 1)
+          : baseUrl;
+      profilePic = '$cleanBase/media/$profilePic';
+    }
+
     await _storage.write(key: StorageKeys.accessToken, value: accessToken);
     await _storage.write(key: StorageKeys.refreshToken, value: refreshToken);
     await _storage.write(key: StorageKeys.userName, value: user.name ?? '');
     await _storage.write(key: StorageKeys.userEmail, value: user.email);
     await _storage.write(
       key: StorageKeys.userProfilePictureUrl,
-      value: user.profilePictureUrl ?? '',
+      value: profilePic ?? '',
     );
   }
 

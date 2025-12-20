@@ -33,15 +33,7 @@ class FileUploadHandler {
         return;
       }
 
-      // Show uploading indicator
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Uploading ${file.name}...'),
-            duration: const Duration(seconds: 2),
-          ),
-        );
-      }
+      // Uploading indicator moved to StorageScreen (LinearProgressIndicator)
 
       // Upload file
       await ref

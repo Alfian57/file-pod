@@ -6,10 +6,12 @@ class StorageActionMenu extends StatelessWidget {
     super.key,
     required this.onCreateFolder,
     required this.onUploadFile,
+    required this.onExportDetails,
   });
 
   final VoidCallback onCreateFolder;
   final VoidCallback onUploadFile;
+  final VoidCallback onExportDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,14 @@ class StorageActionMenu extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
               onUploadFile();
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.output, color: AppTheme.primary),
+            title: const Text('Export Details'),
+            onTap: () {
+              Navigator.pop(context);
+              onExportDetails();
             },
           ),
         ],

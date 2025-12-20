@@ -4,11 +4,12 @@ part 'folder_model.g.dart';
 
 @JsonSerializable()
 class FolderModel {
-  FolderModel({required this.id, required this.name, required this.createdAt});
+  FolderModel({required this.id, required this.name, required this.createdAt, this.color});
 
   final String id;
   final String name;
   final String createdAt;
+  final String? color;
 
   factory FolderModel.fromJson(Map<String, dynamic> json) =>
       _$FolderModelFromJson(json);

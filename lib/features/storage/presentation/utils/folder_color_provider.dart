@@ -13,7 +13,7 @@ class FolderColors {
 }
 
 class FolderColorProvider {
-  static const _colors = [
+  static const availableColors = [
     FolderColors(
       background: Color(0xFFEAF5FF),
       icon: Color(0xFF4B6BE6),
@@ -37,6 +37,22 @@ class FolderColorProvider {
   ];
 
   static FolderColors getColorForIndex(int index) {
-    return _colors[index % _colors.length];
+    return availableColors[index % availableColors.length];
+  }
+
+  static FolderColors getColor(String? colorString) {
+    if (colorString == null) return availableColors[0];
+    // Find color where background value matches (assuming we store hex of background)
+    // Or we store index? Storing hex is safer.
+    // Let's assume we store the hex string of the background color.
+    try {
+      final color = int.parse(colorString);
+      return availableColors.firstWhere(
+        (c) => c.background.value == color,
+        orElse: () => availableColors[0],
+      );
+    } catch (_) {
+      return availableColors[0];
+    }
   }
 }

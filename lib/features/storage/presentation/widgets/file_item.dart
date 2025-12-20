@@ -8,12 +8,14 @@ class FileItem extends StatelessWidget {
     required this.fileDate,
     required this.fileSize,
     this.onMorePressed,
+    this.onTap,
   });
 
   final String fileName;
   final String fileDate;
   final String fileSize;
   final VoidCallback? onMorePressed;
+  final VoidCallback? onTap;
 
   IconData _getFileIcon(String fileName) {
     final extension = fileName.split('.').last.toLowerCase();
@@ -45,65 +47,71 @@ class FileItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 14),
-      decoration: BoxDecoration(color: Colors.transparent),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              color: AppTheme.primary.withAlpha((0.12 * 255).round()),
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Icon(
-                _getFileIcon(fileName),
-                color: AppTheme.primary,
-                size: 26,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 14),
+          decoration: BoxDecoration(color: Colors.transparent),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: AppTheme.primary.withAlpha((0.12 * 255).round()),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Icon(
+                    _getFileIcon(fileName),
+                    color: AppTheme.primary,
+                    size: 26,
+                  ),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  fileName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: AppTheme.textPrimary,
-                    fontWeight: FontWeight.w700,
-                  ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      fileName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: AppTheme.textPrimary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      fileDate,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppTheme.textSecondary,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  fileDate,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppTheme.textSecondary,
-                  ),
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                fileSize,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondary),
+              ),
+              IconButton(
+                onPressed: onMorePressed,
+                icon: const Icon(Icons.more_vert),
+                iconSize: 20,
+              ),
+            ],
           ),
-          const SizedBox(width: 12),
-          Text(
-            fileSize,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondary),
-          ),
-          IconButton(
-            onPressed: onMorePressed,
-            icon: const Icon(Icons.more_vert),
-            iconSize: 20,
-          ),
-        ],
+        ),
       ),
     );
   }

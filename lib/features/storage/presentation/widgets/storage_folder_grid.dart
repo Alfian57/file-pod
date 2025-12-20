@@ -4,6 +4,7 @@ import 'package:file_pod/features/storage/presentation/utils/file_formatter.dart
 import 'package:file_pod/features/storage/presentation/utils/folder_color_provider.dart';
 import 'package:file_pod/features/storage/presentation/widgets/dialogs/delete_folder_dialog.dart';
 import 'package:file_pod/features/storage/presentation/widgets/dialogs/folder_options_bottom_sheet.dart';
+import 'package:file_pod/features/storage/presentation/widgets/dialogs/rename_dialog.dart';
 import 'package:file_pod/features/storage/presentation/widgets/dialogs/share_dialog.dart';
 import 'package:file_pod/features/storage/presentation/widgets/empty_states/empty_folders_widget.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,21 @@ class StorageFolderGrid extends ConsumerWidget {
     if (!context.mounted || action == null) return;
 
     switch (action) {
+      case FolderAction.rename:
+        final newName = await RenameDialog.show(
+          context: context,
+          currentName: folderName,
+          type: 'Folder',
+        );
+
+        if (!context.mounted || newName == null || newName == folderName) return;
+
+        await ref
+            .read(storageControllerProvider.notifier)
+            .renameFolder(folderId, newName);
+
+        ref.read(storageControllerProvider.notifier).getStorage();
+        break;
       case FolderAction.share:
         final password = await ShareDialog.show(
           context: context,
@@ -84,7 +100,7 @@ class StorageFolderGrid extends ConsumerWidget {
       itemCount: storage.folders.length,
       itemBuilder: (context, index) {
         final folder = storage.folders[index];
-        final colors = FolderColorProvider.getColorForIndex(index);
+        final colors = FolderColorProvider.getColor(folder.color);
 
         return GestureDetector(
           onTap: () {

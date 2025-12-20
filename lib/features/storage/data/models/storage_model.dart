@@ -6,10 +6,11 @@ part 'storage_model.g.dart';
 
 @JsonSerializable()
 class StorageModel {
-  StorageModel({required this.folders, required this.files});
+  StorageModel({required this.folders, required this.files, this.ancestors});
 
   final List<FolderModel> folders;
   final List<FileModel> files;
+  final List<FolderModel>? ancestors;
 
   factory StorageModel.fromJson(Map<String, dynamic> json) =>
       _$StorageModelFromJson(json);

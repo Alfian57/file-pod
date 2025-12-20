@@ -10,6 +10,7 @@ FolderModel _$FolderModelFromJson(Map<String, dynamic> json) => FolderModel(
   id: json['id'] as String,
   name: json['name'] as String,
   createdAt: json['createdAt'] as String,
+  color: json['color'] as String?,
 );
 
 Map<String, dynamic> _$FolderModelToJson(FolderModel instance) =>
@@ -17,4 +18,5 @@ Map<String, dynamic> _$FolderModelToJson(FolderModel instance) =>
       'id': instance.id,
       'name': instance.name,
       'createdAt': instance.createdAt,
+      'color': instance.color,
     };

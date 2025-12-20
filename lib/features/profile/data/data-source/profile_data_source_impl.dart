@@ -1,4 +1,5 @@
 import 'package:chopper/chopper.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:file_pod/core/models/api_response_model.dart';
 import 'package:file_pod/core/providers/api_provider.dart';
 import 'package:file_pod/core/utils/api_message_extractor.dart';
@@ -33,10 +34,19 @@ class ProfileDataSourceImpl implements ProfileDataSource {
       throw Exception('User profile response missing data');
     }
 
+    String? profilePic = userData.profilePictureUrl;
+    if (profilePic != null && !profilePic.startsWith('http')) {
+      final baseUrl = dotenv.env['BASE_URL'] ?? 'http://localhost:8080';
+      final cleanBase = baseUrl.endsWith('/')
+          ? baseUrl.substring(0, baseUrl.length - 1)
+          : baseUrl;
+      profilePic = '$cleanBase/media/$profilePic';
+    }
+
     return UserEntity(
       name: userData.name ?? '',
       email: userData.email,
-      profilePictureUrl: userData.profilePictureUrl,
+      profilePictureUrl: profilePic,
       storageQuotaBytes: userData.storageQuotaBytes,
       storageUsedBytes: userData.storageUsedBytes,
     );

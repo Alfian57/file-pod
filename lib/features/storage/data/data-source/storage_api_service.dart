@@ -1,5 +1,7 @@
 import 'package:chopper/chopper.dart';
 import 'package:file_pod/core/models/api_response_model.dart';
+import 'package:file_pod/features/storage/data/models/file_model.dart';
+import 'package:file_pod/features/storage/data/models/folder_model.dart';
 import 'package:file_pod/features/storage/data/models/share_response_model.dart';
 import 'package:file_pod/features/storage/data/models/storage_model.dart';
 import 'package:file_pod/features/storage/data/models/storage_statistics_model.dart';
@@ -12,6 +14,8 @@ abstract class StorageApiService extends ChopperService {
   Future<Response<ApiResponseModel<StorageModel>>> getStorage({
     @Query('sortBy') String? sortBy,
     @Query('sortOrder') String? sortOrder,
+    @Query('search') String? search,
+    @Query('type') String? type,
   });
 
   @GET(path: '/{id}')
@@ -19,6 +23,8 @@ abstract class StorageApiService extends ChopperService {
     @Path('id') String id, {
     @Query('sortBy') String? sortBy,
     @Query('sortOrder') String? sortOrder,
+    @Query('search') String? search,
+    @Query('type') String? type,
   });
 
   @GET(path: '/statistics')
@@ -55,6 +61,18 @@ abstract class StorageApiService extends ChopperService {
 
   @POST(path: '/folder/{id}/share')
   Future<Response<ApiResponseModel<ShareResponseModel>>> shareFolder(
+    @Path('id') String id,
+    @Body() Map<String, dynamic> body,
+  );
+
+  @PATCH(path: '/folder/{id}/rename')
+  Future<Response<ApiResponseModel<FolderModel>>> renameFolder(
+    @Path('id') String id,
+    @Body() Map<String, dynamic> body,
+  );
+
+  @PATCH(path: '/file/{id}/rename')
+  Future<Response<ApiResponseModel<FileModel>>> renameFile(
     @Path('id') String id,
     @Body() Map<String, dynamic> body,
   );

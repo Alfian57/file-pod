@@ -1,0 +1,45 @@
+name: Android Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.19.0' # Adjust as needed
+        channel: 'stable'
+
+    - name: Create .env file
+      run: |
+        echo "BASE_URL=${{ vars.BASE_URL }}" >> .env
+        echo "VAR_NAME=${{ vars.BASE_URL }}" >> .env
+
+    - name: Install Dependencies
+      run: flutter pub get
+
+    - name: Build APK
+      run: flutter build apk --release
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: build/app/outputs/flutter-apk/app-release.apk
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

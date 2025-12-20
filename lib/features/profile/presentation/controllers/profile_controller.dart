@@ -36,7 +36,7 @@ class ProfileState {
 }
 
 class ProfileController extends Notifier<ProfileState> {
-  late final ProfileRepository _repo;
+  late ProfileRepository _repo;
 
   @override
   ProfileState build() {

@@ -14,6 +14,11 @@ class FolderOptionsBottomSheet {
               onTap: () => Navigator.pop(context, FolderAction.share),
             ),
             ListTile(
+              leading: const Icon(Icons.edit),
+              title: const Text('Rename'),
+              onTap: () => Navigator.pop(context, FolderAction.rename),
+            ),
+            ListTile(
               leading: const Icon(Icons.delete, color: Colors.red),
               title: const Text(
                 'Delete Folder',
@@ -28,4 +33,4 @@ class FolderOptionsBottomSheet {
   }
 }
 
-enum FolderAction { share, delete }
+enum FolderAction { share, rename, delete }

@@ -15,11 +15,15 @@ class StorageRepositoryImpl implements StorageRepository {
   Future<Either<String, StorageEntity>> getStorage({
     String? sortBy,
     String? sortOrder,
+    String? search,
+    String? type,
   }) async {
     try {
       final storage = await storageDataSource.getStorage(
         sortBy: sortBy,
         sortOrder: sortOrder,
+        search: search,
+        type: type,
       );
       return Right(storage);
     } catch (e) {
@@ -33,12 +37,16 @@ class StorageRepositoryImpl implements StorageRepository {
     String folderId, {
     String? sortBy,
     String? sortOrder,
+    String? search,
+    String? type,
   }) async {
     try {
       final storage = await storageDataSource.getStorageDetail(
         folderId,
         sortBy: sortBy,
         sortOrder: sortOrder,
+        search: search,
+        type: type,
       );
       return Right(storage);
     } catch (e) {
@@ -50,10 +58,15 @@ class StorageRepositoryImpl implements StorageRepository {
   @override
   Future<Either<String, Unit>> createFolder(
     String name,
-    String? parentFolderId,
-  ) async {
+    String? parentFolderId, {
+    String? color,
+  }) async {
     try {
-      await storageDataSource.createFolder(name, parentFolderId);
+      await storageDataSource.createFolder(
+        name,
+        parentFolderId,
+        color: color,
+      );
       return const Right(unit);
     } catch (e) {
       final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
@@ -73,12 +86,11 @@ class StorageRepositoryImpl implements StorageRepository {
   }
 
   @override
-  Future<Either<String, Unit>> uploadFile(
-    String filePath,
-    String? folderId,
-  ) async {
+  Future<Either<String, Unit>> uploadFile(String filePath, String? folderId,
+      {void Function(int, int)? onProgress}) async {
     try {
-      await storageDataSource.uploadFile(filePath, folderId);
+      await storageDataSource.uploadFile(filePath, folderId,
+          onProgress: onProgress);
       return const Right(unit);
     } catch (e) {
       final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
@@ -133,6 +145,28 @@ class StorageRepositoryImpl implements StorageRepository {
         password,
       );
       return Right(shareResponse);
+    } catch (e) {
+      final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+      return Left(msg);
+    }
+  }
+
+  @override
+  Future<Either<String, Unit>> renameFolder(String folderId, String name) async {
+    try {
+      await storageDataSource.renameFolder(folderId, name);
+      return const Right(unit);
+    } catch (e) {
+      final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+      return Left(msg);
+    }
+  }
+
+  @override
+  Future<Either<String, Unit>> renameFile(String fileId, String name) async {
+    try {
+      await storageDataSource.renameFile(fileId, name);
+      return const Right(unit);
     } catch (e) {
       final msg = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
       return Left(msg);

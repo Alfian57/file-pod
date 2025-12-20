@@ -9,7 +9,8 @@ import 'package:file_pod/features/auth/data/models/user_model.dart';
 import 'package:file_pod/features/storage/data/models/storage_model.dart';
 import 'package:file_pod/features/storage/data/models/storage_statistics_model.dart';
 import 'package:file_pod/features/storage/data/models/folder_model.dart';
-import 'package:file_pod/features/storage/data/models/file_model.dart';
+import 'package:file_pod/features/storage/data/models/file_model.dart'; 
+import 'package:file_pod/features/storage/data/models/share_response_model.dart';
 
 final Map<Type, Function> _jsonFactories = {
   LoginDataModel: (json) => LoginDataModel.fromJson(json),
@@ -19,6 +20,7 @@ final Map<Type, Function> _jsonFactories = {
   StorageStatisticsModel: (json) => StorageStatisticsModel.fromJson(json),
   FolderModel: (json) => FolderModel.fromJson(json),
   FileModel: (json) => FileModel.fromJson(json),
+  ShareResponseModel: (json) => ShareResponseModel.fromJson(json),
   // Add other model factories here
 };
 
