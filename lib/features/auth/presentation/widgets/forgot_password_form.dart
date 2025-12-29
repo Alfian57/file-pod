@@ -16,6 +16,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
+      autovalidateMode: AutovalidateMode.disabled,
       child: Column(
         children: [
           AppInput(

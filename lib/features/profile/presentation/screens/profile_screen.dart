@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:file_pod/core/configs/router-configs/route_names.dart';
 import 'package:file_pod/core/widgets/shared/storage_app_bar.dart';
 import 'package:file_pod/core/widgets/shared/storage_bottom_navigation_bar.dart';
 import 'package:file_pod/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:file_pod/features/profile/presentation/widgets/profile_logout_button.dart';
+import 'package:file_pod/features/profile/presentation/widgets/profile_settings_section.dart';
+import 'package:file_pod/features/profile/presentation/widgets/profile_support_section.dart';
 import 'package:file_pod/features/profile/presentation/widgets/sheets/change_password_sheet.dart';
 import 'package:file_pod/features/profile/presentation/widgets/sheets/edit_profile_sheet.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +17,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../theme.dart';
 import '../controllers/profile_controller.dart';
-import '../widgets/profile_storage_info.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -73,7 +74,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       );
 
       if (confirm == true) {
-        // Ensure we send the current name along with the image
         final currentName = ref.read(profileControllerProvider).user?.name;
         await ref
             .read(profileControllerProvider.notifier)
@@ -83,7 +83,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Future<void> _logout() async {
-    // Show confirmation dialog
     final shouldLogout = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -128,6 +127,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
+  void _showInfoDialog(String title, String content) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.info,
+      animType: AnimType.bottomSlide,
+      title: title,
+      desc: content,
+      btnOkOnPress: () {},
+    ).show();
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(profileControllerProvider);
@@ -143,7 +153,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           btnOkOnPress: () {},
         ).show();
       } else if (next.successMessage != null && !next.isLoading) {
-         AwesomeDialog(
+        AwesomeDialog(
           context: context,
           dialogType: DialogType.success,
           animType: AnimType.bottomSlide,
@@ -176,112 +186,40 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         children: [
                           _buildProfileHeader(state),
                           const SizedBox(height: 32),
-                          // Settings Section
-                          _buildSectionTitle('Account Settings'),
-                          const SizedBox(height: 12),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                _buildMenuItem(
-                                  icon: Icons.person_outline,
-                                  title: 'Edit Profile',
-                                  onTap: _showEditProfileSheet,
-                                  color: AppTheme.primary,
-                                ),
-                                const Divider(height: 1, indent: 56),
-                                _buildMenuItem(
-                                  icon: Icons.lock_outline,
-                                  title: 'Change Password',
-                                  onTap: _showChangePasswordSheet,
-                                  color: Colors.orange,
-                                ),
-                              ],
-                            ),
+                          ProfileSettingsSection(
+                            onEditProfile: _showEditProfileSheet,
+                            onChangePassword: _showChangePasswordSheet,
                           ),
                           const SizedBox(height: 24),
-                          
-                          // Support Section
-                          _buildSectionTitle('Support & Legal'),
-                          const SizedBox(height: 12),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
+                          ProfileSupportSection(
+                            onFaq: () => _showInfoDialog(
+                              'Frequently Asked Questions',
+                              'Q: How do I store files?\nA: Simply upload them via the Storage tab.\n\n'
+                              'Q: Is my data secure?\nA: Yes, we use industry-standard encryption.\n\n'
+                              'Q: Can I share folders?\nA: Yes, you can generate share links for any folder.',
                             ),
-                            child: Column(
-                              children: [
-                                _buildMenuItem(
-                                  icon: Icons.help_outline,
-                                  title: 'FAQ',
-                                  onTap: () => _showInfoDialog(
-                                    'Frequently Asked Questions', 
-                                    'Q: How do I store files?\nA: Simply upload them via the Storage tab.\n\n'
-                                    'Q: Is my data secure?\nA: Yes, we use industry-standard encryption.\n\n'
-                                    'Q: Can I share folders?\nA: Yes, you can generate share links for any folder.'
-                                  ),
-                                  color: Colors.blue,
-                                ),
-                                const Divider(height: 1, indent: 56),
-                                _buildMenuItem(
-                                  icon: Icons.info_outline,
-                                  title: 'About Us',
-                                  onTap: () => _showInfoDialog(
-                                    'About FilePod', 
-                                    'FilePod is your secure, personal cloud storage solution. \n\n'
-                                    'Version: 1.0.0\n'
-                                    'Developed by: Deepmind Team\n'
-                                    '© 2024 FilePod Inc.'
-                                  ),
-                                  color: Colors.purple,
-                                ),
-                                const Divider(height: 1, indent: 56),
-                                _buildMenuItem(
-                                  icon: Icons.description_outlined,
-                                  title: 'Terms & Conditions',
-                                  onTap: () => _showInfoDialog(
-                                    'Terms & Conditions', 
-                                    '1. Acceptance of Terms\naccessing this app, you agree to be bound by these terms.\n\n'
-                                    '2. User Conduct\nYou agree not to misuse the service or upload illegal content.\n\n'
-                                    '3. Liability\nWe are not liable for data loss due to unforeseen circumstances.'
-                                  ),
-                                  color: Colors.teal,
-                                ),
-                                const Divider(height: 1, indent: 56),
-                                _buildMenuItem(
-                                  icon: Icons.privacy_tip_outlined,
-                                  title: 'Privacy Policy',
-                                  onTap: () => _showInfoDialog(
-                                    'Privacy Policy', 
-                                    'We value your privacy.\n\n'
-                                    '1. Data Collection\nWe collect only essential data to provide our service.\n\n'
-                                    '2. Data Usage\nWe do not sell your personal data to third parties.'
-                                  ),
-                                  color: Colors.indigo,
-                                ),
-                              ],
+                            onAboutUs: () => _showInfoDialog(
+                              'About FilePod',
+                              'FilePod is your secure, personal cloud storage solution. \n\n'
+                              'Version: 1.0.0\n'
+                              'Developed by: Deepmind Team\n'
+                              '© 2025 FilePod Inc.',
+                            ),
+                            onTerms: () => _showInfoDialog(
+                              'Terms & Conditions',
+                              '1. Acceptance of Terms\nBy accessing this app, you agree to be bound by these terms.\n\n'
+                              '2. User Conduct\nYou agree not to misuse the service or upload illegal content.\n\n'
+                              '3. Liability\nWe are not liable for data loss due to unforeseen circumstances.',
+                            ),
+                            onPrivacy: () => _showInfoDialog(
+                              'Privacy Policy',
+                              'We value your privacy.\n\n'
+                              '1. Data Collection\nWe collect only essential data to provide our service.\n\n'
+                              '2. Data Usage\nWe do not sell your personal data to third parties.',
                             ),
                           ),
-
                           const SizedBox(height: 48),
-                          _buildLogoutButton(),
+                          ProfileLogoutButton(onPressed: _logout),
                           const SizedBox(height: 40),
                         ],
                       ),
@@ -290,54 +228,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       ),
       bottomNavigationBar: const StorageBottomNavigationBar(),
     );
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 8.0),
-        child: Text(
-          title,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: Colors.grey.shade600,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMenuItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-    required Color color,
-  }) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Icon(icon, color: color, size: 20),
-      ),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
-      trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
-      onTap: onTap,
-    );
-  }
-
-  void _showInfoDialog(String title, String content) {
-      AwesomeDialog(
-          context: context,
-          dialogType: DialogType.info,
-          animType: AnimType.bottomSlide,
-          title: title,
-          desc: content,
-          btnOkOnPress: () {},
-      ).show();
   }
 
   Widget _buildProfileHeader(ProfileState state) {
@@ -417,32 +307,4 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       ],
     );
   }
-
-  Widget _buildLogoutButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: _logout,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.red,
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-            side: BorderSide(color: Colors.red.withOpacity(0.2)),
-          ),
-        ),
-        child: const Text(
-          'Log Out',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-
-
 }

@@ -17,9 +17,6 @@ class RegisterForm extends ConsumerStatefulWidget {
 class _RegisterFormState extends ConsumerState<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
 
-  bool _obscurePassword = true;
-  bool _obscureConfirm = true;
-
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -50,29 +47,37 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    showSnackBar(String text, bool isError) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(text),
-          backgroundColor: isError ? theme.colorScheme.error : null,
-        ),
-      );
-    }
-
     ref.listen(authControllerProvider, (prev, next) {
-      if (next.error != null) {
-        showSnackBar(next.error!, true);
+      // Show error snackbar only when error first appears
+      if (next.error != null && prev?.error != next.error) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.error!),
+            backgroundColor: theme.colorScheme.error,
+          ),
+        );
       }
 
+      // Navigate on successful registration
       if (prev?.isLoading == true && !next.isLoading && next.error == null) {
-        showSnackBar('Registration successful', false);
-        context.pushNamed(RouteNames.login);
+        if (!mounted) return;
+        // Clear any existing error snackbar first
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Registration successful'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+        context.goNamed(RouteNames.login);
       }
     });
 
     return Form(
       key: _formKey,
+      autovalidateMode: AutovalidateMode.disabled,
       child: Column(
         children: [
           AppInput(
@@ -80,6 +85,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             icon: Icons.person_outline,
             controller: _nameController,
             keyboardType: TextInputType.name,
+            textInputAction: TextInputAction.next,
             validator: (v) {
               if (v == null || v.isEmpty) return 'Name is required';
               return null;
@@ -93,6 +99,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             icon: Icons.email_outlined,
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
             validator: (v) {
               if (v == null || v.isEmpty) return 'Email is required';
               if (!v.contains('@')) return 'Invalid email';
@@ -106,17 +113,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             hintText: 'Password',
             icon: Icons.lock_outline,
             controller: _passwordController,
-            obscureText: _obscurePassword,
-            suffix: IconButton(
-              onPressed: () =>
-                  setState(() => _obscurePassword = !_obscurePassword),
-              icon: Icon(
-                _obscurePassword
-                    ? Icons.visibility_outlined
-                    : Icons.visibility_off_outlined,
-                color: const Color(0xFF6B6F76),
-              ),
-            ),
+            isPassword: true,
+            textInputAction: TextInputAction.next,
             validator: (v) {
               if (v == null || v.isEmpty) return 'Password is required';
               if (v.length < 6) return 'Minimum 6 characters';
@@ -130,17 +128,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             hintText: 'Confirm Password',
             icon: Icons.lock_outline,
             controller: _confirmController,
-            obscureText: _obscureConfirm,
-            suffix: IconButton(
-              onPressed: () =>
-                  setState(() => _obscureConfirm = !_obscureConfirm),
-              icon: Icon(
-                _obscureConfirm
-                    ? Icons.visibility_outlined
-                    : Icons.visibility_off_outlined,
-                color: const Color(0xFF6B6F76),
-              ),
-            ),
+            isPassword: true,
+            textInputAction: TextInputAction.done,
+            onFieldSubmitted: (_) => onSubmit(),
             validator: (v) {
               if (v == null || v.isEmpty) {
                 return 'Please confirm password';

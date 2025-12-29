@@ -20,6 +20,7 @@ class StorageStatScreen extends ConsumerWidget {
     'Video': Color(0xFF4ECB71),
     'Documents': Color(0xFF567DF4),
     'Others': Color(0xFFFF974A),
+    'Free Space': Color(0xFFE0E0E0),
   };
 
   @override
@@ -51,9 +52,9 @@ class StorageStatScreen extends ConsumerWidget {
             return const Center(child: Text('No data available'));
           }
 
-          final chartData = _buildChartData(statistics.categories);
           final totalBytes = BigInt.parse(statistics.totalBytes);
           final availableBytes = BigInt.parse(statistics.availableBytes);
+          final chartData = _buildChartData(statistics.categories, totalBytes, availableBytes);
 
           return RefreshIndicator(
             onRefresh: () =>
@@ -90,7 +91,11 @@ class StorageStatScreen extends ConsumerWidget {
     );
   }
 
-  List<ChartData> _buildChartData(List<StorageCategoryModel> categories) {
+  List<ChartData> _buildChartData(
+    List<StorageCategoryModel> categories, 
+    BigInt totalBytes,
+    BigInt availableBytes,
+  ) {
     final List<ChartData> chartData = [];
 
     for (final category in categories) {
@@ -102,6 +107,14 @@ class StorageStatScreen extends ConsumerWidget {
           value: sizeBytes.toDouble() / (1024 * 1024 * 1024), // Convert to GB
         ));
       }
+    }
+
+    // Add free space as a segment
+    if (availableBytes > BigInt.zero) {
+      chartData.add(ChartData(
+        color: categoryColors['Free Space']!,
+        value: availableBytes.toDouble() / (1024 * 1024 * 1024), // Convert to GB
+      ));
     }
 
     return chartData;

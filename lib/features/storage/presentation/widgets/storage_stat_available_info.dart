@@ -35,7 +35,7 @@ class StorageStatAvailableInfo extends StatelessWidget {
 
     return Column(
       children: [
-        Text('Available', style: theme.textTheme.bodyMedium),
+        Text('Free Space', style: theme.textTheme.bodyMedium),
         const SizedBox(height: 4),
         Text(
           _formatBytes(availableBytes),
